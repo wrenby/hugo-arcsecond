@@ -1,10 +1,10 @@
 name = 'arcsecond'
 license = 'MIT'
-licenselink = 'https://github.com/wrenby/arcsecond/LICENSE'
+licenselink = 'https://github.com/wrenby/hugo-arcsecond/LICENSE'
 description = 'A photo gallery theme with astrophotography-focused features'
 
 # The home page of the theme, where the source can be found
-homepage = 'https://github.com/wrenby/arcsecond'
+homepage = 'https://github.com/wrenby/hugo-arcsecond'
 
 # If you have a running demo of the theme
 demosite = 'https://astro.wren.dev'

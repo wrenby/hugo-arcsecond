@@ -4,6 +4,10 @@
     {{ with resources.Get .Site.Params.favicon }}
         <link rel="icon" href="{{ .RelPermalink }}" />
     {{ end }}
+{{ else if .Site.Params.logo }}
+    {{ with resources.Get .Site.Params.logo }}
+        <link rel="icon" href="{{ .RelPermalink }}" />
+    {{ end }}
 {{ else }}
     <link rel="icon" href="/favicon.ico" />
 {{ end }}

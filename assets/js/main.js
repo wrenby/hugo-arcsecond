@@ -69,9 +69,11 @@ function position_tooltip(term_elem) {
 
 addEventListener("DOMContentLoaded", (ev) => {
     var grid = document.querySelector('#gallery-grid');
-    var msn = new Masonry(grid, {
-        itemSelector: '.gallery-grid-item',
-        percentPosition: true,
-        horizontalOrder: true,
-      })
+    if (grid) {
+        var msn = new Masonry(grid, {
+            itemSelector: '.gallery-grid-item',
+            percentPosition: true,
+            horizontalOrder: true,
+        });
+    }
 })
