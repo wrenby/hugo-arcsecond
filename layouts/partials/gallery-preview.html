@@ -4,19 +4,20 @@
     {{ $image := resources.Get $which }}
     {{ $jpg := $image.Resize "500x jpg q85 Lanczos" }}
     {{ $ar := (div $jpg.Width (float $jpg.Height)) }}
-    {{ $ar_pad := (mul (div $jpg.Height (float $jpg.Width)) 100) }}
     <div class="gallery-grid-item">
-        <a href="{{ .RelPermalink }}">
-            <img src="{{ $jpg.RelPermalink }}"
-                alt="{{ .Params.title }}"
-                style="aspect-ratio: {{ $ar }};" />
-            <div class="overlay">
-                <p>{{ .Params.title }}</p>
-                {{- with .Params.description -}}
-                <p><span class="description">{{ . }}</span></p>
-                {{- end -}}
-            </div>
-        </a>
+        <div class="img-pad">
+            <a href="{{ .RelPermalink }}">
+                <img src="{{ $jpg.RelPermalink }}"
+                    alt="{{ .Params.title }}"
+                    style="aspect-ratio: {{ $ar }};" />
+                <div class="overlay">
+                    <p>{{ .Params.title }}</p>
+                    {{- with .Params.description -}}
+                    <p><span class="description">{{ . }}</span></p>
+                    {{- end -}}
+                </div>
+            </a>
+        </div>
     </div>
 {{ else }}
     <div class="gallery-grid-item">

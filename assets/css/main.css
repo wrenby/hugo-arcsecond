@@ -281,8 +281,6 @@ footer {
 }
 
 .gallery-grid-item {
-  position: relative;
-  overflow: hidden;
   width: calc(100%/3);
   min-width: calc(100%/3);
   animation: 0.75s ease-out 0s 1 slideInFromLeft;
@@ -291,6 +289,11 @@ footer {
   /* TODO: replace with masonry gutter sizer */
   padding: 0.25rem;
   box-sizing: border-box;
+
+  & .img-pad {
+    position: relative;
+    overflow: hidden;
+  }
 
   & img {
     width: 100%;
@@ -305,11 +308,11 @@ footer {
     transform: translateY(100%);
     transition: transform 0.25s ease-out;
 
-    /* TODO: get rid of margin and set width to 100% when masonry gutters added */
-    margin: 0.25rem;
-    width: calc(100% - 0.5rem);
-    bottom: 0;
-    left: 0;
+    padding-bottom: 5px;
+    /* slightly oversizing makes it look right on firefox*/
+    width: calc(100% + 4px);
+    bottom: 0px;
+    left: -2px;
     text-align: center;
     font-size: 24px;
 
