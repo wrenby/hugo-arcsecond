@@ -1,0 +1,11 @@
+{{ if .Inner }}
+  {{ if gt (len .Params) 0 }}
+    {{- partial "definition.html" (dict "global" $ "inner" .Inner "term" (index .Params 0)) -}}
+  {{ else }}
+    {{- partial "definition.html" (dict "global" $ "inner" .Inner "term" .Inner) -}}
+  {{ end }}
+{{ else if gt (len .Params) 0 }}
+  {{- partial "definition.html" (dict "global" $ "term" (index .Params 0)) -}}
+{{ else }}
+  {{ errorf "Definition shortcode requires either inner text or a parameter to know what word to define" }}
+{{ end }}

@@ -1,0 +1,14 @@
+{{- if gt (len .Params) 0 -}}
+  {{ $url := index .Params 0}}
+  {{- if .Page.Scratch.Get "citations_map" -}}
+    {{- if not (isset (.Page.Scratch.Get "citations_map") $url) -}}
+      {{- $citation_index := add (len (.Page.Scratch.Get "citations_map")) 1 -}}
+      {{- .Page.Scratch.SetInMap "citations_map" $url $citation_index -}}
+    {{- end -}}
+  {{- else -}}
+    {{- .Page.Scratch.SetInMap "citations_map" $url 1 -}}
+  {{- end -}}
+<sup><a href="{{ $url }}">[{{- index (.Page.Scratch.Get "citations_map") $url -}}]</a></sup>
+{{- else -}}
+  {{- errorf "Citation shortcode requires a parameter to know where to link to" -}}
+{{- end -}}

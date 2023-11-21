@@ -1,0 +1,9 @@
+<h1><a href="/">
+    {{- if .Site.Params.logo -}}
+        {{- with resources.Get .Site.Params.logo -}}
+            <img src="{{ .RelPermalink }}" alt="{{ $.Site.Title }} Icon" />
+        {{- end -}}
+    {{- end -}}
+    {{- site.Title -}}
+</a></h1>
+{{ partial "menu.html" (dict "menuID" "main" "page" .) }}

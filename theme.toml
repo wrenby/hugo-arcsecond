@@ -1,0 +1,20 @@
+name = 'arcsecond'
+license = 'MIT'
+licenselink = 'https://github.com/wrenby/arcsecond/LICENSE'
+description = 'A photo gallery theme with astrophotography-focused features'
+
+# The home page of the theme, where the source can be found
+homepage = 'https://github.com/wrenby/arcsecond'
+
+# If you have a running demo of the theme
+demosite = 'https://astro.wren.dev'
+
+# Taxonomy terms
+tags = ['reactive', 'gallery', 'astrophotography']
+features = ['reactive', 'gallery', 'astrophotography']
+
+# If the theme has a single author
+[author]
+  name = 'Wren Baxter'
+  homepage = 'https://astro.wren.dev'
+

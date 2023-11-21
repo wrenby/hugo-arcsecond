@@ -1,0 +1,19 @@
+<div>
+    <a href="{{ .RelPermalink }}">
+    {{ if .Params.thumbnail }}
+        {{ $image := resources.GetMatch .Params.thumbnail }}
+        {{ $jpg := $image.Resize "600x jpg q85 Lanczos" }}
+        <div>
+            <img src="{{ $jpg.RelPermalink }}" alt="{{ .Params.title }}" />
+        </div>
+    {{ else if .Params.featured_image }}
+        {{ $image := resources.GetMatch .Params.featured_image }}
+        {{ $jpg := $image.Resize "600x jpg q85 Lanczos" }}
+        <div>
+            <img src="{{ $jpg.RelPermalink }}" alt="{{ .Params.title }}" />
+        </div>
+    {{ end }}
+        <div>{{ .Params.title }}</div>
+        <div>{{ .Params.description }}</div>
+    </a>
+</div>

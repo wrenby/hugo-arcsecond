@@ -1,0 +1,15 @@
+{{- $lookup := lower (htmlUnescape .term) -}}
+{{- $defn := index .global.Site.Data.definitions $lookup -}}
+{{- if $defn -}}
+  {{- if .inner -}}
+    <span class="term" data-term={{- $lookup -}}>
+        {{- .inner -}}
+    </span>
+  {{- else -}}
+    <span class="term" data-term={{- $lookup -}}>
+      {{- .term -}}
+    </span>
+  {{- end -}}
+{{- else -}}
+  {{- errorf "Term <%v> not found in dictionary" $lookup -}}
+{{- end -}}
