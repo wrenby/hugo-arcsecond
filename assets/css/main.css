@@ -5,6 +5,7 @@
   --accent4: #118ab2;
 
   --true-background: #131316;
+  --transparent-background: #131316bb;
   --block-background: hsl(223, 20%, 10%);
   --text: #C9CAC7;
   --headers: #F7F7F2;
@@ -236,6 +237,31 @@ h1, h2, h3, h4, h5 {
   transition-duration: 0.25s;
 }
 
+ul.pagination {
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+
+  & li {
+    display: inline-block;
+    list-style: none;
+    font-size: 20px;
+    transition-duration: 0.25s;
+  }
+  & li.disabled {
+    cursor: default;
+    filter: brightness(40%);
+  }
+  & li.active {
+    cursor: default;
+    color: var(--accent2);
+  }
+  & li:not(.disabled):hover {
+    color: var(--accent2);
+  }
+}
+
 footer {
   margin-top: 2rem;
   margin-bottom: 2rem;
@@ -248,19 +274,86 @@ footer {
   cursor: pointer;
 }
 
+#gallery-grid {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.gallery-grid-item {
+  position: relative;
+  overflow: hidden;
+  width: calc(100%/3);
+  min-width: calc(100%/3);
+  animation: 0.75s ease-out 0s 1 slideInFromLeft;
+
+  /* hack to get gaps working with masonry */
+  /* TODO: replace with masonry gutter sizer */
+  padding: 0.25rem;
+  box-sizing: border-box;
+
+  & img {
+    width: 100%;
+    display: block;
+  }
+
+  & .overlay {
+    line-height: 1;
+    background-color: var(--transparent-background);
+
+    position: absolute;
+    transform: translateY(100%);
+    transition: transform 0.25s ease-out;
+
+    width: 100%;
+    bottom: 0;
+    left: 0;
+    text-align: center;
+    font-size: 24px;
+
+    & p {
+      margin: 0.5rem;
+    }
+
+    & .description {
+      font-size: 18px;
+      font-weight: normal;
+    }
+  }
+}
+.gallery-grid-item:hover .overlay {
+  transform: translateY(0%);
+}
+
+@keyframes slideInFromLeft {
+  0% {
+    transform: translateX(-20%) scale(80%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
 @media (min-width: 1350px) {
   body {
+    min-width: min(95vw, 1450px);
     max-width: min(95vw, 1450px);
   }
 }
 
 @media (max-width: 1350px) {
   body {
+    min-width: min(95vw, 1450px);
     max-width: 95vw;
   }
 }
 
 @media (max-width: 1000px) {
+  .gallery-grid-item {
+    width: 50%;
+  }
   div.content {
     flex-direction: column;
 
@@ -294,5 +387,11 @@ footer {
 @media (max-width: 716px) {
   header {
     justify-content: space-evenly;
+  }
+}
+
+@media (max-width: 525px) {
+  .gallery-grid-item {
+    width: 100%;
   }
 }

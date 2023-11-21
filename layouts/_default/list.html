@@ -1,12 +1,12 @@
 {{ define "main" }}
-  {{ $paginator := .Paginate .Pages.ByDate.Reverse 6 }}
-  <div class="gallery-preview">
+  {{ $paginator := .Paginate .Pages.ByDate.Reverse 12 }}
+  <div id="gallery-grid">
     {{ range $paginator.Pages }}
       {{- partial "gallery-preview.html" . -}}
     {{ end }}
   </div>
 
-  <div class="grid place-items-center mb-8">
+  <div>
     {{ template "_internal/pagination.html" . }}
   </div>
 {{ end }}

@@ -10,7 +10,7 @@ homepage = 'https://github.com/wrenby/arcsecond'
 demosite = 'https://astro.wren.dev'
 
 # Taxonomy terms
-tags = ['reactive', 'gallery', 'astrophotography']
+tags = ['reactive', 'gallery', 'astrophotography', 'masonry']
 features = ['reactive', 'gallery', 'astrophotography']
 
 # If the theme has a single author
