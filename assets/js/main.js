@@ -89,34 +89,46 @@ addEventListener("DOMContentLoaded", (ev) => {
             let next = nextElem ? nextElem.getAttribute("href") : null;
             document.querySelector(".pagination").parentElement.remove();
 
-            const loader = document.querySelector("#infinite-loader");
             const options = {
                 root: null,
-                rootMargin: "200px",
+                rootMargin: "0px",
                 threshold: 1.0,
             };
+            function isElementInViewport(el) {
+                var rect = el.getBoundingClientRect();
+
+                return (
+                    rect.top >= 0 &&
+                    rect.left >= 0 &&
+                    rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+                    rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+                );
+            }
+            const loader = document.querySelector("#infinite-loader")
             let callback = (entries, obs) => {
                 entries.forEach(async (entry) => {
                     if (entry.isIntersecting) {
-                        const response = await (await fetch(next)).text();
-                        const page = document.createElement("div");
-                        page.innerHTML = response;
+                        do {
+                            const response = await (await fetch(next)).text();
+                            const page = document.createElement("div");
+                            page.innerHTML = response;
 
-                        page.querySelectorAll(".gallery-grid-item").forEach((item) => {
-                            item.style.animationPlayState = "paused";
-                            gallery.appendChild(item);
-                            mason.appended(item);
-                        });
-                        mason.layout();
-                        gallery.querySelectorAll(".gallery-grid-item").forEach((item) => {
-                            item.style.animationPlayState = "running";
-                        })
+                            page.querySelectorAll(".gallery-grid-item").forEach((item) => {
+                                item.style.animationPlayState = "paused";
+                                gallery.appendChild(item);
+                                mason.appended(item);
+                            });
+                            mason.layout();
+                            gallery.querySelectorAll(".gallery-grid-item").forEach((item) => {
+                                item.style.animationPlayState = "running";
+                            })
 
-                        nextElem = document.querySelector(".pagination *[aria-label='Next']");
-                        next = nextElem ? nextElem.getAttribute("href") : null;
-                        if (!next) {
-                            obs.unobserve(loader);
-                        }
+                            nextElem = page.querySelector(".pagination *[aria-label='Next']");
+                            next = nextElem ? nextElem.getAttribute("href") : null;
+                            if (!next) {
+                                obs.disconnect();
+                            }
+                        } while (next && isElementInViewport(loader));
                     }
                 })
             };

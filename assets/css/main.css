@@ -85,6 +85,10 @@ header {
   }
 }
 
+#infinite-loader {
+  transform: translateY(-200px);
+}
+
 footer {
   margin-top: 1rem;
   text-align: center;
