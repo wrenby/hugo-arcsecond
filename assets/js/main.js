@@ -1,3 +1,5 @@
+import * as params from '@params';
+
 fetch("/definitions.json")
     .then(response => {
         return response.json();
@@ -68,12 +70,61 @@ function position_tooltip(term_elem) {
 }
 
 addEventListener("DOMContentLoaded", (ev) => {
-    var grid = document.querySelector('#gallery-grid');
-    if (grid) {
-        var msn = new Masonry(grid, {
+    const gallery = document.querySelector('#gallery-grid');
+    if (gallery) {
+        gallery.querySelectorAll('.gallery-grid-item').forEach((item) => {
+            item.style.animationPlayState = "paused";
+        })
+        let mason = new Masonry(gallery, {
             itemSelector: '.gallery-grid-item',
             percentPosition: true,
-            horizontalOrder: true,
+            // horizontalOrder: true,
         });
+        gallery.querySelectorAll('.gallery-grid-item').forEach((item) => {
+            item.style.animationPlayState = "running";
+        })
+
+        if (params.infiniteScroll) {
+            let nextElem = document.querySelector(".pagination *[aria-label='Next']");
+            let next = nextElem ? nextElem.getAttribute("href") : null;
+            document.querySelector(".pagination").parentElement.remove();
+
+            const loader = document.querySelector("#infinite-loader");
+            const options = {
+                root: null,
+                rootMargin: "200px",
+                threshold: 1.0,
+            };
+            let callback = (entries, obs) => {
+                entries.forEach(async (entry) => {
+                    if (entry.isIntersecting) {
+                        const response = await (await fetch(next)).text();
+                        const page = document.createElement("div");
+                        page.innerHTML = response;
+
+                        page.querySelectorAll(".gallery-grid-item").forEach((item) => {
+                            item.style.animationPlayState = "paused";
+                            gallery.appendChild(item);
+                            mason.appended(item);
+                        });
+                        mason.layout();
+                        gallery.querySelectorAll(".gallery-grid-item").forEach((item) => {
+                            item.style.animationPlayState = "running";
+                        })
+
+                        nextElem = document.querySelector(".pagination *[aria-label='Next']");
+                        next = nextElem ? nextElem.getAttribute("href") : null;
+                        if (!next) {
+                            obs.unobserve(loader);
+                        }
+                    }
+                })
+            };
+
+            if (next) {
+                let observer = new IntersectionObserver(callback, options);
+                observer.observe(loader);
+            }
+        }
     }
 })

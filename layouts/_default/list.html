@@ -6,6 +6,9 @@
     {{ end }}
   </div>
 
+{{ if $.Site.Params.infinite_scroll }}
+  <div id="infinite-loader"></div>
+{{ end }}
   <div>
     {{ template "_internal/pagination.html" . }}
   </div>

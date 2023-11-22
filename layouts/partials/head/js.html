@@ -2,14 +2,19 @@
   <script src="{{ .RelPermalink }}"></script>
 {{- end }}
 {{- with resources.Get "js/main.js" }}
+  {{ $params := dict "infiniteScroll" $.Site.Params.infinite_scroll }}
   {{- if eq hugo.Environment "development" }}
-    {{- with . | js.Build }}
+    {{- $opts := dict "params" $params }}
+    {{- with . | js.Build $opts }}
       <script src="{{ .RelPermalink }}"></script>
     {{- end }}
   {{- else }}
-    {{- $opts := dict "minify" true }}
+    {{- $opts := dict "minify" true "params" $params }}
     {{- with . | js.Build $opts | fingerprint }}
       <script src="{{ .RelPermalink }}" integrity="{{- .Data.Integrity }}" crossorigin="anonymous"></script>
     {{- end }}
   {{- end }}
+{{- end }}
+{{ range .Site.Params.custom_js -}}
+    <script type="text/javascript" src="{{ (resources.Get .).RelPermalink }}"></script>
 {{- end }}

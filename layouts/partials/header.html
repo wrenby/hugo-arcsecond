@@ -1,5 +1,5 @@
 <h1>
-    {{ $href := (cond (ne .Site.Params.front_page nil) .Site.Params.font_page "/") }}
+    {{ $href := (cond (ne .Site.Params.front_page nil) (path.Join "/" .Site.Params.front_page) "/") }}
     <a href="{{ $href }}">
     {{- if .Site.Params.logo -}}
         {{- with resources.Get .Site.Params.logo -}}

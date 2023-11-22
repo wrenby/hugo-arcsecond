@@ -1,5 +1,6 @@
-
-{{ $which := (cond (ne .Params.thumbnail nil) .Params.thumbnail .Params.featured_image) }}
+{{/* $root := (cond (eq .Page.Kind "term") (index .Page.RegularPages 0) .) */}}
+{{ $root := . }}
+{{ $which := (cond (ne $root.Params.thumbnail nil) $root.Params.thumbnail $root.Params.featured_image) }}
 {{ if $which }}
     {{ $image := resources.Get $which }}
     {{ $jpg := $image.Resize "500x jpg q85 Lanczos" }}

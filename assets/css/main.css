@@ -6,7 +6,7 @@
 
   --true-background: #131316;
   --transparent-background: #131316bb;
-  --block-background: hsl(223, 20%, 10%);
+  --block-background: hsl(223, 20%, 12%);
   --text: #C9CAC7;
   --headers: #F7F7F2;
 }
@@ -59,7 +59,7 @@ header {
   }
 
   & ul li:hover {
-    transition-duration: 0.5s;
+    transition: color 0.5s ease-out;
   }
   & ul li:hover:nth-child(1) {
     color: var(--accent1);
@@ -87,6 +87,7 @@ header {
 
 footer {
   margin-top: 1rem;
+  text-align: center;
 }
 
 a {
@@ -159,15 +160,13 @@ div.content {
 
     & article {
       background-color: var(--block-background);
-      padding: 3rem;
+      padding: min(3rem, 8vw);
     }
   }
 }
 
-div.image:hover {
-  & section.controls {
-    bottom: 0;
-  }
+div.image:hover section.controls {
+  bottom: 0;
 }
 
 .title {
@@ -329,16 +328,13 @@ footer {
 }
 
 /* TODO: consider , .gallery-grid-item a:focus .overlay */
-.gallery-grid-item:hover .overlay {
+.gallery-grid-item .img-pad:hover .overlay {
   transform: translateY(0%);
 }
 
 @keyframes slideInFromLeft {
   0% {
     transform: translateX(-20%) translateY(-12.5%) scale(75%);
-    opacity: 0;
-  }
-  5% { /* small buffer makes it */
     opacity: 0;
   }
   100% {
