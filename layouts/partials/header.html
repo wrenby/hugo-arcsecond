@@ -1,9 +1,16 @@
-<h1><a href="/">
+<h1>
+    {{ $href := (cond (ne .Site.Params.front_page nil) .Site.Params.font_page "/") }}
+    <a href="{{ $href }}">
     {{- if .Site.Params.logo -}}
         {{- with resources.Get .Site.Params.logo -}}
-            <img src="{{ .RelPermalink }}" alt="{{ $.Site.Title }} Icon" />
+            {{ if eq .MediaType.Type "image/svg+xml" }}
+                {{ partialCached "inline-svg.html" .RelPermalink }}
+            {{ else }}
+                <img src="{{ .RelPermalink }}" />
+            {{ end }}
         {{- end -}}
     {{- end -}}
     {{- site.Title -}}
-</a></h1>
+    </a>
+</h1>
 {{ partial "menu.html" (dict "menuID" "main" "page" .) }}

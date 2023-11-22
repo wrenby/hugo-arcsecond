@@ -1,0 +1,9 @@
+{{ $file := resources.Get . }}
+{{ if $file }}
+    {{ $file.Content | safeHTML }}
+    {{/*  {{ $match := "<svg(.*)?>(.*)</svg>" }}
+    {{ $replaceWith := printf `<svg${1}>${2}</svg>` }}
+    {{ return (replaceRE $match $replaceWith $file.Content | safeHTML) }}  */}}
+{{ else }}
+    {{ errorf "Missing resource %s" . }}
+{{ end }}

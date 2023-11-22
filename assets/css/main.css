@@ -31,17 +31,18 @@ header {
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
-  column-gap: 2.5rem;
+  column-gap: 1.5rem;
 
   & h1 {
     font-size: max(min(8.5vw, 42px), 28px);
   }
 
-  & img {
-    max-width: max(min(12.5vw, 64px), 42px);;
-    aspect-ratio: 1;
+  & svg, img {
+    display: inline-block;
+    max-width: max(min(12.5vw, 64px), 42px);
+    max-height: max(min(12.5vw, 64px), 42px);
     vertical-align: text-bottom;
-    margin-right: 1rem;
+    margin-right: 0.5rem;
   }
 
   & nav {
@@ -283,7 +284,7 @@ footer {
 .gallery-grid-item {
   width: calc(100%/3);
   min-width: calc(100%/3);
-  animation: 0.75s ease-out 0s 1 slideInFromLeft;
+  animation: 0.75s ease-in-out 0s 1 slideInFromLeft;
 
   /* hack to get gaps working with masonry */
   /* TODO: replace with masonry gutter sizer */
@@ -326,13 +327,18 @@ footer {
     }
   }
 }
+
+/* TODO: consider , .gallery-grid-item a:focus .overlay */
 .gallery-grid-item:hover .overlay {
   transform: translateY(0%);
 }
 
 @keyframes slideInFromLeft {
   0% {
-    transform: translateX(-20%) scale(80%);
+    transform: translateX(-20%) translateY(-12.5%) scale(75%);
+    opacity: 0;
+  }
+  5% { /* small buffer makes it */
     opacity: 0;
   }
   100% {
