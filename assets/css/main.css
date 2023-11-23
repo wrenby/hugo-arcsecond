@@ -274,8 +274,57 @@ footer {
   }
 }
 
-#search {
+#search-button {
   cursor: pointer;
+  z-index: 2;
+  position: relative;
+}
+
+header nav ul {
+  position: relative;
+}
+
+#search-box {
+  position: absolute;
+  opacity: 0;
+
+  left: 100%;
+  top: -10%;
+  width: 0;
+  height: 140%;
+
+  transition: all 0.25s ease-out;
+  z-index: 1;
+  background-color: var(--true-background);
+  box-sizing: border-box;
+  border: 1px solid var(--accent4);
+
+  & input {
+    display: block;
+    float: left;
+    background-color: transparent;
+    color: inherit;
+    font-size: 100%;
+    box-sizing: border-box;
+    border: none none none 1px solid var(--text);
+    width: 0;
+    height: 100%;
+    outline: none;
+  }
+}
+
+#search-box:focus-within {
+  opacity: 1;
+
+  left: 0;
+  width: 100%;
+  padding: 0.25rem;
+  border-width: 3px;
+
+  & input {
+    width: 90%;
+    margin: auto;
+  }
 }
 
 #gallery-grid {
@@ -331,8 +380,7 @@ footer {
   }
 }
 
-/* TODO: consider , .gallery-grid-item a:focus .overlay */
-.gallery-grid-item .img-pad:hover .overlay {
+.gallery-grid-item .img-pad:hover .overlay,.gallery-grid-item .img-pad:focus-within .overlay {
   transform: translateY(0%);
 }
 
