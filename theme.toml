@@ -11,7 +11,7 @@ demosite = 'https://astro.wren.dev'
 
 # Taxonomy terms
 tags = ['reactive', 'gallery', 'astrophotography', 'masonry']
-features = ['reactive', 'gallery', 'astrophotography']
+features = ['reactive', 'gallery', 'search', 'astrophotography']
 
 # If the theme has a single author
 [author]

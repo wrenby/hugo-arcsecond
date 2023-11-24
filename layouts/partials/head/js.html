@@ -2,7 +2,7 @@
   <script src="{{ .RelPermalink }}"></script>
 {{- end }}
 {{- with resources.Get "js/main.js" }}
-  {{ $params := dict "infiniteScroll" $.Site.Params.infinite_scroll }}
+  {{ $params := dict "infiniteScroll" $.Site.Params.infinite_scroll "searchHotKey" $.Site.Params.search_hotkey }}
   {{- if eq hugo.Environment "development" }}
     {{- $opts := dict "params" $params }}
     {{- with . | js.Build $opts }}

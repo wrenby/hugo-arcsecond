@@ -324,6 +324,13 @@ footer {
   position: relative;
 }
 
+header nav button {
+  background-color: inherit;
+  color: inherit;
+  border: none;
+  padding: 0;
+}
+
 header nav ul {
   position: relative;
 }

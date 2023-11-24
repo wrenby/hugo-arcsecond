@@ -1,0 +1,11 @@
+{{- $.Scratch.Add "index" slice -}}
+{{- range .Site.RegularPages -}}
+    {{- $thumbnail := cond (ne .Params.thumbnail nil) .Params.thumbnail .Params.featured_image -}}
+    {{- $dict := dict "title" .Title "tags" .Params.tags "categories" .Params.categories "content" .Plain "permalink" .RelPermalink -}}
+    {{- if $thumbnail -}}
+        {{ $jpg := (resources.Get $thumbnail).Resize "500x jpg q85 Lanczos" }}
+        {{- $dict = merge $dict (dict "thumbnail" $jpg.RelPermalink) -}}
+    {{- end -}}
+    {{- $.Scratch.Add "index" $dict -}}
+{{- end -}}
+{{- $.Scratch.Get "index" | jsonify -}}
