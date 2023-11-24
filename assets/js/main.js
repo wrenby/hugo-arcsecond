@@ -6,7 +6,9 @@ fetch("/definitions.json")
     })
     .then(definitions => {
         if (document.readySate == "loading") {
-            document.addEventListener("DOMContentLoaded", () => create_all_tooltips(definitions));
+            document.addEventListener("DOMContentLoaded", () => {
+                create_all_tooltips(definitions);
+            });
         } else {
             create_all_tooltips(definitions);
         }
@@ -125,10 +127,10 @@ addEventListener("DOMContentLoaded", (ev) => {
 
                             nextElem = page.querySelector(".pagination *[aria-label='Next']");
                             next = nextElem ? nextElem.getAttribute("href") : null;
-                            if (!next) {
-                                obs.disconnect();
-                            }
                         } while (next && isElementInViewport(loader));
+                        if (!next) {
+                            obs.disconnect();
+                        }
                     }
                 })
             };
@@ -138,5 +140,39 @@ addEventListener("DOMContentLoaded", (ev) => {
                 observer.observe(loader);
             }
         }
+    }
+
+    const button = document.querySelector("#search-button");
+    const svg = button.querySelector("svg");
+    const box = document.querySelector("#search-box input");
+    let should_submit = false;
+    box.addEventListener("blur", (ev) => {
+        // clicked the search button while the text box was active
+        if (button === ev.explicitOriginalTarget || svg === ev.explicitOriginalTarget) {
+            should_submit = true;
+        }
+    });
+    box.addEventListener("keydown", (ev) => {
+        if (ev.key == 'Escape') {
+            ev.preventDefault();
+            box.blur();
+        }
+    });
+    button.addEventListener("click", (ev) => {
+        if (should_submit) {
+            document.search.submit();
+        } else {
+            box.focus();
+        }
+    });
+    if (params.searchHotKey) {
+        document.body.addEventListener("keydown", (ev) => {
+            if (ev.key == params.searchHotKey) {
+                if (document.activeElement !== box) {
+                    ev.preventDefault();
+                    box.focus();
+                }
+            }
+        });
     }
 })

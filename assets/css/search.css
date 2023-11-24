@@ -1,0 +1,44 @@
+#search-results {
+    display: grid;
+    columns: 1;
+    gap: 0.5rem;
+    & .search-result {
+        all: unset;
+        animation: 0.4s ease-out 1 slideUp;
+        animation-fill-mode: both;
+        line-height: 1.25;
+
+        & .search-thumbnail {
+            float: left;
+            margin-right: 1rem;
+            margin-bottom: 0.5rem;
+            & img, .thumbnail-placeholder {
+                display: block;
+                margin: auto;
+                width: min(300px, 40vw);
+            }
+        }
+        & .search-thumbnail .thumbnail-placeholder {
+            background-color: var(--block-background);
+            opacity: 0.35;
+            aspect-ratio: 1.5;
+        }
+    }
+}
+
+.search-noscript {
+    animation: 0.1s step-end 0s 1 slideUp;
+    animation-fill-mode: both;
+}
+
+@keyframes slideUp {
+    0% {
+        opacity: 0;
+        transform: translateY(10%) scale(90%);
+
+    }
+    100% {
+        opacity: 1;
+        transform: none;
+    }
+}

@@ -303,10 +303,19 @@ ul.pagination {
   }
   & li.active {
     cursor: default;
+    border-bottom: 3px solid;
+  }
+  & li:not(.disabled):nth-of-type(4n + 1):hover {
+    color: var(--accent1);
+  }
+  & li:not(.disabled):nth-of-type(4n + 2):hover {
     color: var(--accent2);
   }
-  & li:not(.disabled):hover {
-    color: var(--accent2);
+  & li:not(.disabled):nth-of-type(4n + 3):hover {
+    color: var(--accent3);
+  }
+  & li:not(.disabled):nth-of-type(4n):hover {
+    color: var(--accent4);
   }
 }
 
@@ -387,7 +396,8 @@ header nav ul {
 .gallery-grid-item {
   width: calc(100%/3);
   min-width: calc(100%/3);
-  animation: 0.75s ease-in-out 0s 1 slideInFromLeft;
+  animation: 0.5s ease-out 0s 1 slideInFromLeft;
+  animation-fill-mode: backwards;
 
   /* hack to get gaps working with masonry */
   /* TODO: replace with masonry gutter sizer */

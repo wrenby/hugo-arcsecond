@@ -20,5 +20,5 @@
     <script src='{{ (resources.Get "js/search.js").RelPermalink }}'></script>
     <link rel="prefetch" href="/index.json"  as="fetch" />
 {{ end }}
-{{ partialCached "head/css.html" . }}
-{{ partialCached "head/js.html" . }}
+{{ partial "head/css.html" . }}
+{{ partial "head/js.html" . }}

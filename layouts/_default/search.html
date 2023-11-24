@@ -1,8 +1,7 @@
 {{ define "main" }}
 
-<main>
-    <div id="search-results"></div>
-    <div class="search-loading">Sorry, {{ .Site.Title }} uses a client-side search function that is incompatible with JavaScript blockers.</div>
-</main>
+<div id="search-results"></div>
+<div class="search-loading">Loading...</div>
+<div class="search-noscript">Sorry, {{ .Site.Title }} uses a client-side search library that is incompatible with JavaScript blockers.</div>
 
 {{ end }}

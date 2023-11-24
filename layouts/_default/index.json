@@ -1,10 +1,12 @@
 {{- $.Scratch.Add "index" slice -}}
 {{- range .Site.RegularPages -}}
     {{- $thumbnail := cond (ne .Params.thumbnail nil) .Params.thumbnail .Params.featured_image -}}
-    {{- $dict := dict "title" .Title "tags" .Params.tags "categories" .Params.categories "content" .Plain "permalink" .RelPermalink -}}
+    {{/* TODO: make content HTML and add some kind of a hook to generate tooltips on the results */}}
+    {{- $dict := dict "title" .Title "tags" .Params.tags "categories" .Params.categories "content" .Plain "url" .RelPermalink -}}
     {{- if $thumbnail -}}
-        {{ $jpg := (resources.Get $thumbnail).Resize "500x jpg q85 Lanczos" }}
-        {{- $dict = merge $dict (dict "thumbnail" $jpg.RelPermalink) -}}
+        {{ $jpg := (resources.Get $thumbnail).Resize "300x jpg q85 Lanczos" }}
+        {{ $ar := (div $jpg.Width (float $jpg.Height)) }}
+        {{- $dict = merge $dict (dict "thumbnail" $jpg.RelPermalink "thumbnailAspectRatio" $ar) -}}
     {{- end -}}
     {{- $.Scratch.Add "index" $dict -}}
 {{- end -}}
