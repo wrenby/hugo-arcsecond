@@ -11,10 +11,41 @@
   --headers: #F7F7F2;
 }
 
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/Inter-Regular-Latin.woff2") format("woff2"), url("/Inter-Regular-Latin.zopfli.woff") format("woff");
+}
+@font-face {
+  font-family: "Inter";
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/Inter-Italic-Latin.woff2") format("woff2"), url("/Inter-Italic-Latin.zopfli.woff") format("woff");
+}
+
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/Inter-Bold-Latin.woff2") format("woff2"), url("/Inter-Bold-Latin.zopfli.woff") format("woff");
+}
+@font-face {
+  font-family: "Inter";
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/Inter-BoldItalic-Latin.woff2") format("woff2"), url("/Inter-BoldItalic-Latin.zopfli.woff") format("woff");
+}
+
 html {
   margin: auto;
   display: table;
   background-color: var(--true-background);
+  font-family: "Inter", sans-serif;
 }
 
 body {
@@ -22,7 +53,6 @@ body {
   display: table-cell;
   vertical-align: middle;
   color: var(--text);
-  font-family: sans-serif;
   line-height: 1.5;
 }
 
@@ -61,17 +91,31 @@ header {
   & ul li:hover {
     transition: color 0.5s ease-out;
   }
-  & ul li:hover:nth-child(1) {
+  /* menu items cycle through accent colors */
+  & ul li:hover:nth-child(4n+1), ul #search-box:nth-child(4n+1) + li#search-button:hover {
     color: var(--accent1);
   }
-  & ul li:hover:nth-child(2) {
+  & ul li:hover:nth-child(4n+2), ul #search-box:nth-child(4n+2) + li#search-button:hover {
     color: var(--accent2);
   }
-  & ul li:hover:nth-child(3) {
+  & ul li:hover:nth-child(4n+3), ul #search-box:nth-child(4n+3) + li#search-button:hover {
     color: var(--accent3);
   }
-  & ul li:hover:nth-child(4) {
+  & ul li:hover:nth-child(4n), ul #search-box:nth-child(4n) + li#search-button:hover {
     color: var(--accent4);
+  }
+  /* force search box and search button to match colors*/
+  & #search-box:nth-child(4n+1) {
+    border-color: var(--accent1);
+  }
+  & #search-box:nth-child(4n+2) {
+    border-color: var(--accent2);
+  }
+  & #search-box:nth-child(4n+3) {
+    border-color: var(--accent3);
+  }
+  & #search-box:nth-child(4n) {
+    border-color: var(--accent4);
   }
 
   & nav {
@@ -288,16 +332,17 @@ header nav ul {
   position: absolute;
   opacity: 0;
 
-  left: 100%;
-  top: -10%;
+  right: 0;
+  bottom: -0.4em;
   width: 0;
-  height: 140%;
+  height: 2.6em;
 
   transition: all 0.25s ease-out;
   z-index: 1;
   background-color: var(--true-background);
   box-sizing: border-box;
-  border: 1px solid var(--accent4);
+  border-width: 1px;
+  border-style: solid;
 
   & input {
     display: block;
@@ -306,7 +351,7 @@ header nav ul {
     color: inherit;
     font-size: 100%;
     box-sizing: border-box;
-    border: none none none 1px solid var(--text);
+    border: none;
     width: 0;
     height: 100%;
     outline: none;
@@ -316,13 +361,12 @@ header nav ul {
 #search-box:focus-within {
   opacity: 1;
 
-  left: 0;
-  width: 100%;
+  width: clamp(150px, 100%, 350px);
   padding: 0.25rem;
   border-width: 3px;
 
   & input {
-    width: 90%;
+    width: calc(100% - 24px);
     margin: auto;
   }
 }
@@ -443,9 +487,12 @@ header nav ul {
   }
 }
 
-@media (max-width: 716px) {
+@media (max-width: 720px) {
   header {
-    justify-content: space-evenly;
+    flex-direction: column;
+    & > * {
+      margin: auto auto;
+    }
   }
 }
 

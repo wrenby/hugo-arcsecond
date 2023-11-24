@@ -1,5 +1,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width">
+<link rel="preload" href='{{ (resources.Get "css/main.css").RelPermalink }}'  as="style" crossorigin/>
+<link rel="preload" href="/Inter-Bold-Latin.woff2"  as="font" type="font/woff2" crossorigin/>
+<link rel="preload" href="/Inter-Regular-Latin.woff2"  as="font" type="font/woff2" crossorigin/>
 {{ if .Site.Params.favicon }}
     {{ with resources.Get .Site.Params.favicon }}
         <link rel="icon" href="{{ .RelPermalink }}" />
