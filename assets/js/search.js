@@ -19,7 +19,23 @@ document.addEventListener("DOMContentLoaded", async () => {
             boost: 10
         });
 
-        // TODO: ignore stopWordList for titles -- "about" is not a searchable word by default in lunr.js
+        // TODO: support for non-english languages https://lunrjs.com/guides/language_support.html
+        var skipField = function (fieldName, fn) {
+            return function (token, i, tokens) {
+                return token.metadata["fields"].indexOf(fieldName) >= 0 ? token : fn(token, i, tokens);
+            }
+        }
+
+        // disable stemming and stop word list for titles -- mainly to prevent the About page from being unsearchable
+        const skipStopWordFilter = skipField("title", lunr.stopWordFilter);
+        lunr.Pipeline.registerFunction(skipStopWordFilter, "skipStopWordFilter");
+        this.pipeline.remove(lunr.stopWordFilter);
+        this.pipeline.add(skipStopWordFilter);
+
+        const skipStemmer = skipField("title", lunr.stemmer);
+        lunr.Pipeline.registerFunction(skipStemmer, "skipStemmer");
+        this.pipeline.remove(lunr.stemmer);
+        this.pipeline.add(skipStemmer);
 
         // plaintext-ify the content so HTML tags/attributes don't show up as matches
         let scratch = document.createElement("div");

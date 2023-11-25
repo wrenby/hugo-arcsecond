@@ -20,7 +20,7 @@
         }
         & .search-thumbnail .thumbnail-placeholder {
             background-color: var(--block-background);
-            opacity: 0.35;
+            opacity: 0.5;
             aspect-ratio: 1.5;
         }
     }
