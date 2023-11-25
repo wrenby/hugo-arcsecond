@@ -2,11 +2,11 @@
 {{- $defn := index .global.Site.Data.definitions $lookup -}}
 {{- if $defn -}}
   {{- if .inner -}}
-    <span class="term" data-term={{- $lookup -}}>
+    <span class="term" data-term="{{- $lookup -}}">
         {{- .inner -}}
     </span>
   {{- else -}}
-    <span class="term" data-term={{- $lookup -}}>
+    <span class="term" data-term="{{- $lookup -}}">
       {{- .term -}}
     </span>
   {{- end -}}

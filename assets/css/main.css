@@ -6,7 +6,7 @@
 
   --true-background: #131316;
   --transparent-background: #131316bb;
-  --block-background: hsl(223, 20%, 12%);
+  --block-background: hsl(223, 20%, 11%);
   --text: #C9CAC7;
   --headers: #F7F7F2;
 }
@@ -204,6 +204,14 @@ div.content {
       & #featured_image {
         width: 100%;
       }
+
+      & #annotations {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+      }
     }
 
     & article {
@@ -257,7 +265,7 @@ h1, h2, h3, h4, h5 {
   text-align: center;
   border-radius: 6px;
   padding: 5px 10px;
-  z-index: 1;
+  z-index: 2;
   opacity: 0;
   transition: opacity 0.3s;
 }
@@ -265,7 +273,7 @@ h1, h2, h3, h4, h5 {
 .definition-outer {
   visibility: hidden;
   width: min(400px, 100vw);
-  z-index: 1;
+  z-index: 2;
   position: absolute;
   top: -999px;
   left: -999px;
@@ -329,7 +337,7 @@ footer {
 
 #search-button {
   cursor: pointer;
-  z-index: 2;
+  z-index: 1;
   position: relative;
 }
 

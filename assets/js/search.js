@@ -13,14 +13,20 @@ document.addEventListener("DOMContentLoaded", async () => {
         this.field('title', {
             boost: 15
         });
-        this.field('tags');
-        this.field('categories');
+        this.field('tag');
+        this.field('category');
         this.field('content', {
             boost: 10
         });
 
+        // TODO: ignore stopWordList for titles -- "about" is not a searchable word by default in lunr.js
+
+        // plaintext-ify the content so HTML tags/attributes don't show up as matches
+        let scratch = document.createElement("div");
         for (const [i, entry] of index.entries()) {
             entry.i = i;
+            scratch.innerHTML = entry.html;
+            entry.content = scratch.textContent;
             this.add(entry);
         }
     });
@@ -34,7 +40,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             const elem = document.createElement("div");
             elem.classList.add("search-result");
 
-            let thumbnail = null;
             if (item.thumbnail) {
                 elem.innerHTML = `<div class="search-thumbnail">` +
                     `<a href="${item.url}"><img src="${item.thumbnail}" style="aspect-ratio: ${item.thumbnailAspectRatio};" /></a></div>`;
@@ -43,11 +48,28 @@ document.addEventListener("DOMContentLoaded", async () => {
                     `<div class="thumbnail-placeholder"></div></div>`;
             }
 
-            elem.innerHTML += `<div><h3><a href="${item.url}">${item.title}</a></h3>` +
-            `<p>${item.content.substring(0, 400)}...<p></div>`;
+            let content = document.createElement("div");
+            content.innerHTML = item.html;
 
-            elem.style.animationDelay = `${i*25}ms`;
-            container.appendChild(elem);
+            let truncated = document.createElement("div");
+            truncated.innerHTML = `<h3><a href="${item.url}">${item.title}</a></h3>`;
+
+            /* since we're using HTML content instead of plaintext, we have to avoid truncating the string in the middle of definition or citation elements */
+            for (let i = 0, charsLeft = 400; charsLeft > 0 && i < content.childNodes.length; i++) {
+                const p = truncated.appendChild(document.createElement("p"));
+                const paragraph = content.childNodes[i];
+                for (let j = 0; charsLeft > 0 && j < paragraph.childNodes.length; j++) {
+                    // must clone to avoid invalidating the paragraph.childNodes iterator
+                    const clone = paragraph.childNodes[j].cloneNode(true);
+                    if (charsLeft < clone.textContent.length) {
+                        clone.textContent = `${clone.textContent.substring(0, charsLeft)}...`;
+                    }
+                    p.appendChild(clone);
+                    charsLeft -= clone.textContent.length;
+                }
+            }
+            elem.style.animationDelay = `${i * 25}ms`;
+            container.appendChild(elem).appendChild(truncated);
         }
     } else {
         container.innerHTML = "No results";
