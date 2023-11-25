@@ -279,11 +279,13 @@ h1, h2, h3, h4, h5 {
   left: -999px;
   display: flex;
   justify-content: center;
+  white-space: initial;
 }
 
 .term {
   cursor: help;
   border-bottom: 1px dotted var(--text);
+  white-space: nowrap;
 }
 
 .term:hover .definition-inner {
@@ -518,6 +520,9 @@ header nav ul {
     & > * {
       margin: auto auto;
     }
+  }
+  .term {
+    white-space: initial;
   }
 }
 

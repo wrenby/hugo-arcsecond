@@ -74,14 +74,14 @@ document.addEventListener("DOMContentLoaded", async () => {
             for (let i = 0, charsLeft = 400; charsLeft > 0 && i < content.childNodes.length; i++) {
                 const p = truncated.appendChild(document.createElement("p"));
                 const paragraph = content.childNodes[i];
-                for (let j = 0; charsLeft > 0 && j < paragraph.childNodes.length; j++) {
-                    // must clone to avoid invalidating the paragraph.childNodes iterator
-                    const clone = paragraph.childNodes[j].cloneNode(true);
-                    if (charsLeft < clone.textContent.length) {
-                        clone.textContent = `${clone.textContent.substring(0, charsLeft)}...`;
+                while (charsLeft > 0 && paragraph.hasChildNodes()) {
+                    const block = paragraph.firstChild;
+                    if (charsLeft < block.textContent.length) {
+                        block.textContent = `${block.textContent.substring(0, charsLeft)}...`;
                     }
-                    p.appendChild(clone);
-                    charsLeft -= clone.textContent.length;
+                    // appendChild moves, not clones, so eventually we will reach our loop exit conditions
+                    p.appendChild(block);
+                    charsLeft -= block.textContent.length;
                 }
             }
             elem.style.animationDelay = `${i * 25}ms`;
