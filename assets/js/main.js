@@ -8,34 +8,34 @@ function createAllTooltips(definitions) {
         const term = t.getAttribute("data-term");
         createTooltip(t, term, definitions[term]);
     }
-    positionAllTooltips();
-    window.addEventListener("resize", positionAllTooltips);
 }
 
 function createTooltip(term_elem, term, defn) {
-    const tooltip_id = `tooltip-${term.replace(" ", "-")}`;
+    if (term_elem.childElementCount == 0) {
+        const tooltip_id = `tooltip-${term.replace(" ", "-")}`;
 
-    let outer = document.createElement("span");
-    outer.setAttribute("class", "definition-outer");
-    outer.setAttribute("role", "tooltip");
-    outer.setAttribute("id", tooltip_id);
+        let outer = document.createElement("span");
+        outer.setAttribute("class", "definition-outer");
+        outer.setAttribute("role", "tooltip");
+        outer.setAttribute("id", tooltip_id);
 
-    let inner = document.createElement("span");
-    inner.setAttribute("class", "definition-inner");
-    inner.setAttribute("id", tooltip_id);
-    inner.innerHTML = defn;
+        let inner = document.createElement("span");
+        inner.setAttribute("class", "definition-inner");
+        inner.setAttribute("id", tooltip_id);
+        inner.innerHTML = defn;
 
-    outer.appendChild(inner);
-    term_elem.appendChild(outer);
+        outer.appendChild(inner);
+        term_elem.appendChild(outer);
 
-    term_elem.setAttribute("aria-describedby", tooltip_id);
-    term_elem.addEventListener("mouseover", (ev) => positionTooltip(ev.target));
+        term_elem.setAttribute("aria-describedby", tooltip_id);
+        term_elem.addEventListener("mouseover", (ev) => positionTooltip(ev.target));
+    }
 }
 
-function positionAllTooltips() {
-    let terms = document.getElementsByClassName("term");
-    for (t of terms) {
-        positionTooltip(t);
+function resetAllTooltipPositions() {
+    for (term of document.getElementsByClassName("term")) {
+        term.firstElementChild.style.top = "initial";
+        term.firstElementChild.style.left = "initial";
     }
 }
 
@@ -67,11 +67,11 @@ function initSearchResultTooltipPositioner(definitions) {
     const callback = (mutationList, observer) => {
         for (const mutation of mutationList) {
             if (mutation.type === "childList") {
-                let terms = search_results_list.getElementsByClassName("term");
-                for (t of terms) {
-                    const term = t.getAttribute("data-term");
-                    createTooltip(t, term, definitions[term]);
-                    positionTooltip(t);
+                for (const div of mutation.addedNodes) {
+                    for (const t of div.getElementsByClassName("term")) {
+                        const term = t.getAttribute("data-term");
+                        createTooltip(t, term, definitions[term]);
+                    }
                 }
             }
         }
@@ -84,8 +84,10 @@ function initSearchResultTooltipPositioner(definitions) {
 
 async function initTooltipPositioner() {
     const definitions = await (await definitionsRequest).json();
-    createAllTooltips(definitions);
+    // set the search results listener before the full-page tooltip positioner so nothing falls through the cracks
     initSearchResultTooltipPositioner(definitions);
+    createAllTooltips(definitions);
+    window.addEventListener("resize", resetAllTooltipPositions);
 }
 
 function initInfiniteScroll(gallery, mason) {
@@ -204,7 +206,7 @@ function initSearchBoxCallbacks() {
 }
 
 document.addEventListener("DOMContentLoaded", async (ev) => {
+    initTooltipPositioner();
     layoutGallery();
     initSearchBoxCallbacks();
-    initTooltipPositioner();
 });

@@ -267,7 +267,7 @@ h1, h2, h3, h4, h5 {
   padding: 5px 10px;
   z-index: 2;
   opacity: 0;
-  transition: opacity 0.3s;
+  transition: opacity 0.2s, visibility 0.1s step-start 0s;
 }
 
 .definition-outer {
@@ -289,6 +289,7 @@ h1, h2, h3, h4, h5 {
 }
 
 .term:hover .definition-inner {
+  transition-delay: 0.1s;
   visibility: visible;
   opacity: 1;
   cursor: auto;
@@ -401,6 +402,8 @@ header nav ul {
   width: 100%;
   display: flex;
   flex-wrap: wrap;
+  /* display: grid;
+  grid-template-columns: repeat(3, 1fr); */
 }
 
 .gallery-grid-item {
@@ -422,6 +425,11 @@ header nav ul {
   & img {
     width: 100%;
     display: block;
+    transition: transform 0.5s ease-out;
+  }
+  & .img-pad:hover img {
+    transition-duration:2.5s;
+    transform: scale(105%);
   }
 
   & .overlay {
@@ -433,9 +441,8 @@ header nav ul {
     transition: transform 0.25s ease-out;
 
     padding-bottom: 5px;
-    /* slightly oversizing makes it look right on firefox*/
     width: calc(100% + 4px);
-    bottom: 0px;
+    bottom: -1px;
     left: -2px;
     text-align: center;
     font-size: 24px;
