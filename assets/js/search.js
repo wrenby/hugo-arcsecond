@@ -4,7 +4,6 @@ let request = fetch("/index.json");
 
 document.addEventListener("DOMContentLoaded", async () => {
     const loading = document.querySelector(".search-loading");
-    document.querySelector(".search-noscript").style.display = "none";
 
     let index = await (await request).json();
     const engine = lunr(function () {

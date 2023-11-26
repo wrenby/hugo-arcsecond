@@ -267,7 +267,7 @@ h1, h2, h3, h4, h5 {
   padding: 5px 10px;
   z-index: 2;
   opacity: 0;
-  transition: opacity 0.2s, visibility 0.1s step-start 0s;
+  transition: opacity 0.1s linear 0.1s, visibility 0.1s step-start 0s;
 }
 
 .definition-outer {
@@ -289,7 +289,7 @@ h1, h2, h3, h4, h5 {
 }
 
 .term:hover .definition-inner {
-  transition-delay: 0.1s;
+  transition: opacity 0.2s 0.1s, visibility 0.1s step-start 0s;
   visibility: visible;
   opacity: 1;
   cursor: auto;
@@ -409,7 +409,7 @@ header nav ul {
 .gallery-grid-item {
   width: calc(100%/3);
   min-width: calc(100%/3);
-  animation: 0.5s ease-out 0s 1 slideInFromLeft;
+  animation: 0.5s ease-out 0s 1 slideInFromLeft paused;
   animation-fill-mode: backwards;
 
   /* hack to get gaps working with masonry */
@@ -441,9 +441,9 @@ header nav ul {
     transition: transform 0.25s ease-out;
 
     padding-bottom: 5px;
-    width: calc(100% + 4px);
-    bottom: -1px;
-    left: -2px;
+    width: 100%;
+    bottom: 0;
+    left: 0;
     text-align: center;
     font-size: 24px;
 
@@ -458,8 +458,17 @@ header nav ul {
   }
 }
 
+@supports(width: round(up, 100%, 1px)) {
+  .gallery-grid-item .overlay {
+    width: round(up, 100%, 1px);
+  }
+  .gallery-grid-item img {
+    width: round(up, 100%, 1px);
+  }
+}
+
 .gallery-grid-item .img-pad:hover .overlay,.gallery-grid-item .img-pad:focus-within .overlay {
-  transform: translateY(0%);
+  transform: translateY(0%) scale(102%);
 }
 
 @keyframes slideInFromLeft {

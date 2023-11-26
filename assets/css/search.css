@@ -27,8 +27,7 @@
 }
 
 .search-noscript {
-    animation: 0.1s step-end 0s 1 slideUp;
-    animation-fill-mode: both;
+    display: none;
 }
 
 @keyframes slideUp {

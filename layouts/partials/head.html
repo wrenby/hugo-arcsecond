@@ -1,6 +1,6 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width">
-<link rel="preload" href='{{ (resources.Get "css/main.css").RelPermalink }}'  as="style" crossorigin />
+<link rel="preload" href='{{ (resources.Get "css/main.css").RelPermalink }}' as="style" />
 <link rel="preload" href="/Inter-Bold-Latin.woff2"  as="font" type="font/woff2" crossorigin />
 <link rel="preload" href="/Inter-Regular-Latin.woff2"  as="font" type="font/woff2" crossorigin />
 {{ if .Site.Params.favicon }}
@@ -22,3 +22,16 @@
 {{ end }}
 {{ partial "head/css.html" . }}
 {{ partial "head/js.html" . }}
+
+<script> let FF_FOUC_FIX; </script>
+
+<noscript>
+    <style>
+        .gallery-grid-item {
+            animation-play-state: running;
+        }
+        .search-noscript {
+            display: block;
+        }
+    </style>
+</noscript>

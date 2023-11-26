@@ -43,16 +43,16 @@ function positionTooltip(term_elem) {
     let tooltip = term_elem.firstElementChild;
     if (tooltip) {
         // this event will never fail on a term element, but it will also fire on definition-outer/inner elements and clog up the error console
-        const obj_rect = term_elem.getBoundingClientRect();
-        const tooltip_rect = tooltip.getBoundingClientRect();
+        const objRect = term_elem.getBoundingClientRect();
+        const tooltipRect = tooltip.getBoundingClientRect();
 
-        let goalX = obj_rect.left + obj_rect.width / 2 - tooltip_rect.width / 2;
-        let goalY = obj_rect.top - tooltip_rect.height;
+        let goalX = objRect.left + objRect.width / 2 - tooltipRect.width / 2;
+        let goalY = objRect.top - tooltipRect.height;
         const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
 
-        goalX = Math.min(vw - tooltip_rect.width, Math.max(goalX, 0));
+        goalX = Math.min(vw - tooltipRect.width, Math.max(goalX, 0));
         if (goalY < 0)
-            goalY = obj_rect.bottom;
+            goalY = objRect.bottom;
 
         tooltip.style.top = (goalY + window.scrollY) + "px";
         tooltip.style.left = (goalX + window.scrollX) + "px";
@@ -61,7 +61,7 @@ function positionTooltip(term_elem) {
 
 function initSearchResultTooltipPositioner(definitions) {
     // enable definition tooltips inside search results
-    const search_results_list = document.querySelector('#search-results');
+    const searchResultsList = document.getElementById('search-results');
     const config = { attributes: false, childList: true, subtree: false };
 
     const callback = (mutationList, observer) => {
@@ -76,9 +76,9 @@ function initSearchResultTooltipPositioner(definitions) {
             }
         }
     };
-    if (search_results_list) {
+    if (searchResultsList) {
         const observer = new MutationObserver(callback);
-        observer.observe(search_results_list, config);
+        observer.observe(searchResultsList, config);
     }
 }
 
@@ -93,7 +93,7 @@ async function initTooltipPositioner() {
 function initInfiniteScroll(gallery, mason) {
     let nextElem = document.querySelector(".pagination *[aria-label='Next']");
     let next = nextElem ? nextElem.getAttribute("href") : null;
-    let pagination = document.querySelector(".pagination");
+    let pagination = document.getElementsByClassName("pagination")[0];
     if (pagination) {
         pagination.parentElement.remove();
     }
@@ -113,7 +113,7 @@ function initInfiniteScroll(gallery, mason) {
             rect.right <= (window.innerWidth || document.documentElement.clientWidth)
         );
     }
-    const loader = document.querySelector("#infinite-loader")
+    const loader = document.getElementById("infinite-loader");
     let callback = (entries, obs) => {
         entries.forEach(async (entry) => {
             if (entry.isIntersecting) {
@@ -122,15 +122,16 @@ function initInfiniteScroll(gallery, mason) {
                     const page = document.createElement("div");
                     page.innerHTML = response;
 
-                    page.querySelectorAll(".gallery-grid-item").forEach((item) => {
-                        item.style.animationPlayState = "paused";
+                    const newItems = page.querySelectorAll(".gallery-grid-item");
+                    // can't use getElementsByClassName because the iterator will invalidate as we appendChild them to the gallery
+                    for (const item of newItems) {
                         gallery.appendChild(item);
                         mason.appended(item);
-                    });
+                    }
                     mason.layout();
-                    gallery.querySelectorAll(".gallery-grid-item").forEach((item) => {
-                        item.style.animationPlayState = "running";
-                    })
+                    for (const item of newItems) {
+                        playAnimationAfterImageLoaded(item);
+                    }
 
                     nextElem = page.querySelector(".pagination *[aria-label='Next']");
                     next = nextElem ? nextElem.getAttribute("href") : null;
@@ -148,20 +149,26 @@ function initInfiniteScroll(gallery, mason) {
     }
 }
 
+function playAnimationAfterImageLoaded(gridItem) {
+    let thumbnail = gridItem.getElementsByTagName("img")[0];
+    if (!thumbnail.complete) {
+        thumbnail.addEventListener('load', () => { gridItem.style.animationPlayState = "running"; });
+    } else {
+        gridItem.style.animationPlayState = "running";
+    }
+}
+
 function layoutGallery() {
-    const gallery = document.querySelector('#gallery-grid');
+    const gallery = document.getElementById('gallery-grid');
     if (gallery) {
-        gallery.querySelectorAll('.gallery-grid-item').forEach((item) => {
-            item.style.animationPlayState = "paused";
-        })
         let mason = new Masonry(gallery, {
             itemSelector: '.gallery-grid-item',
             percentPosition: true,
             // horizontalOrder: true,
         });
-        gallery.querySelectorAll('.gallery-grid-item').forEach((item) => {
-            item.style.animationPlayState = "running";
-        })
+        for (const item of gallery.getElementsByClassName('gallery-grid-item')) {
+            playAnimationAfterImageLoaded(item);
+        }
 
         if (params.infiniteScroll) {
             initInfiniteScroll(gallery, mason);
@@ -170,8 +177,8 @@ function layoutGallery() {
 }
 
 function initSearchBoxCallbacks() {
-    const button = document.querySelector("#search-button");
-    const svg = button.querySelector("svg");
+    const button = document.getElementById("search-button");
+    const svg = button.getElementsByTagName("svg")[0];
     const box = document.querySelector("#search-box input");
     let should_submit = false;
     box.addEventListener("blur", (ev) => {
@@ -206,7 +213,7 @@ function initSearchBoxCallbacks() {
 }
 
 document.addEventListener("DOMContentLoaded", async (ev) => {
-    initTooltipPositioner();
     layoutGallery();
     initSearchBoxCallbacks();
+    initTooltipPositioner();
 });
