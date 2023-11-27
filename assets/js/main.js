@@ -34,8 +34,8 @@ function createTooltip(term_elem, term, defn) {
 
 function resetAllTooltipPositions() {
     for (term of document.getElementsByClassName("term")) {
-        term.firstElementChild.style.top = "initial";
-        term.firstElementChild.style.left = "initial";
+        term.firstElementChild.style.top = "-999px";
+        term.firstElementChild.style.left = "-999px";
     }
 }
 
@@ -215,5 +215,5 @@ function initSearchBoxCallbacks() {
 document.addEventListener("DOMContentLoaded", async (ev) => {
     layoutGallery();
     initSearchBoxCallbacks();
-    initTooltipPositioner();
+    initTooltipPositioner(); // TODO: breaks layout between 300px and 475px
 });
