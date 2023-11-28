@@ -232,7 +232,7 @@ div.image:hover section.controls {
   }
 }
 
-#sky-plot {
+#star-chart {
   padding: 0.75rem;
   & h3 {
     padding: auto 0 0 1rem;
@@ -243,7 +243,12 @@ div.image:hover section.controls {
     width: 100%;
     max-width: 450px;
     aspect-ratio: 1;
+  }
+  & img.from-astrometry\.net {
     filter: contrast(90%) brightness(120%) grayscale(95%);
+  }
+  & img.from-pixinsight {
+    filter: contrast(160%) brightness(85%) grayscale(95%);
   }
 }
 

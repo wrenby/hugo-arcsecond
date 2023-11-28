@@ -24,14 +24,18 @@
       </article>
     </div>
     <aside>
-      {{- if .Params.sky_plot -}}
-        {{- with resources.Get .Params.sky_plot -}}
-          <img src="{{ . }}" />
-        {{- end -}}
-      {{- else if fileExists (path.Join (path.Dir .Page.File.Path) "sky-plot.jpg") }}
-      <section id="sky-plot">
-        <h3>Sky Plot</h3>
-        <img src="sky-plot.jpg" />
+      {{ $star_chart_is_local := fileExists (path.Join (path.Dir .Page.File.Path) "star-chart.jpg") }}
+      {{ $star_chart_src := (cond $star_chart_is_local "star-chart.jpg" (cond (ne .Params.star_chart nil) (resources.Get .Params.star_chart) nil))}}
+      {{- if $star_chart_src -}}
+      <section id="star-chart">
+        <h3>Star Chart</h3>
+        {{/* per-page setting overrides global setting, default is astrometry.net */}}
+        {{ $from := (cond (ne .Params.star_chart_from nil) .Params.star_chart_from (cond (ne .Site.Params.star_charts_from nil) .Site.Params.star_charts_from "astrometry.net" )) }}
+        <img
+          src="{{- $star_chart_src -}}"
+          alt="A chart showing the featured image's location relative to the constellations"
+          class="from-{{- $from -}}"
+        />
       </section>
       {{- end -}}
 
@@ -63,18 +67,6 @@
             Filters: {{ .Params.equipment.filters }}
           </div>
           {{- end -}}
-          {{- if .Params.equipment.telescope -}}
-          <div>
-            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-telescope" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-              <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-              <path d="M6 21l6 -5l6 5" />
-              <path d="M12 13v8" />
-              <path d="M3.294 13.678l.166 .281c.52 .88 1.624 1.265 2.605 .91l14.242 -5.165a1.023 1.023 0 0 0 .565 -1.456l-2.62 -4.705a1.087 1.087 0 0 0 -1.447 -.42l-.056 .032l-12.694 7.618c-1.02 .613 -1.357 1.897 -.76 2.905z" />
-              <path d="M14 5l3 5.5" />
-            </svg>
-            Telescope: {{ .Params.equipment.telescope }}
-          </div>
-          {{- end -}}
           {{- if .Params.equipment.lens -}}
           <div>
             <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-aperture" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -87,6 +79,18 @@
               <path d="M12.257 20.916l3.261 -10.034" />
             </svg>
             Lens: {{ .Params.equipment.lens }}
+          </div>
+          {{- end -}}
+          {{- if .Params.equipment.telescope -}}
+          <div>
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-telescope" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+              <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+              <path d="M6 21l6 -5l6 5" />
+              <path d="M12 13v8" />
+              <path d="M3.294 13.678l.166 .281c.52 .88 1.624 1.265 2.605 .91l14.242 -5.165a1.023 1.023 0 0 0 .565 -1.456l-2.62 -4.705a1.087 1.087 0 0 0 -1.447 -.42l-.056 .032l-12.694 7.618c-1.02 .613 -1.357 1.897 -.76 2.905z" />
+              <path d="M14 5l3 5.5" />
+            </svg>
+            Telescope: {{ .Params.equipment.telescope }}
           </div>
           {{- end -}}
           {{- if .Params.equipment.mount -}}

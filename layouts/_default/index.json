@@ -1,7 +1,7 @@
 {{- $.Scratch.Add "index" slice -}}
 {{- range .Site.RegularPages -}}
     {{- $thumbnail := cond (ne .Params.thumbnail nil) .Params.thumbnail .Params.featured_image -}}
-    {{- $dict := dict "title" .Title "tag" .Params.tags "category" .Params.categories "html" (chomp .Content) "url" .RelPermalink -}}
+    {{- $dict := dict "title" .Title "tag" .Params.tags "category" .Params.categories "equipment" .Params.equipment "html" (chomp .Content) "url" .RelPermalink -}}
     {{- if $thumbnail -}}
         {{ $jpg := (resources.Get $thumbnail).Resize "300x jpg q85 Lanczos" }}
         {{ $ar := (div $jpg.Width (float $jpg.Height)) }}

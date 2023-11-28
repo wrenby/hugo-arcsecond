@@ -68,9 +68,12 @@ function initSearchResultTooltipPositioner(definitions) {
         for (const mutation of mutationList) {
             if (mutation.type === "childList") {
                 for (const div of mutation.addedNodes) {
-                    for (const t of div.getElementsByClassName("term")) {
-                        const term = t.getAttribute("data-term");
-                        createTooltip(t, term, definitions[term]);
+                    // will be a div for a successful search, but will be a text node on error or no results
+                    if (div.nodeType == Node.ELEMENT_NODE) {
+                        for (const t of div.getElementsByClassName("term")) {
+                            const term = t.getAttribute("data-term");
+                            createTooltip(t, term, definitions[term]);
+                        }
                     }
                 }
             }
@@ -151,7 +154,7 @@ function initInfiniteScroll(gallery, mason) {
 
 function playAnimationAfterImageLoaded(gridItem) {
     let thumbnail = gridItem.getElementsByTagName("img")[0];
-    if (!thumbnail.complete) {
+    if (thumbnail && !thumbnail.complete) {
         thumbnail.addEventListener('load', () => { gridItem.style.animationPlayState = "running"; });
     } else {
         gridItem.style.animationPlayState = "running";
