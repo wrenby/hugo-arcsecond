@@ -218,5 +218,5 @@ function initSearchBoxCallbacks() {
 document.addEventListener("DOMContentLoaded", async (ev) => {
     layoutGallery();
     initSearchBoxCallbacks();
-    initTooltipPositioner(); // TODO: breaks layout between 300px and 475px
+    initTooltipPositioner();
 });

@@ -10,6 +10,80 @@
           alt="{{ .Params.title }}"
           id="featured_image"
           style="aspect-ratio: {{ $image.Width }}/{{ $image.Height }};" />
+
+          {{ $annotationsPath := (path.Join (path.Dir $.Page.File.Path) "annotations.json") }}
+          {{ if (fileExists $annotationsPath) }}
+            {{ $annotationsPath := (strings.TrimPrefix hugo.WorkingDir (path.Join (path.Dir $.Page.File.Filename) "annotations.json")) }}
+            <svg id="annotations" viewBox="0 0 {{$image.Width}} {{$image.Height}}" xmlns="http://www.w3.org/2000/svg">
+              <style>
+                #annotations {
+                  opacity: 0;
+                  transition: all 0.5s ease-in-out;
+                }
+                #annotations * {
+                  transform-box: fill-box;
+                  transform-origin: center;
+                  fill: transparent;
+                  shape-rendering: geometricPrecision;
+                }
+                #annotations:hover {
+                  opacity: 1;
+                }
+                #annotations text {
+                  pointer-events: none;
+                  font: {{div $image.Height 40.0}}px sans-serif;
+                  fill: white;
+                  opacity: 0;
+                  transition: all 0.35s ease-in-out;
+                  filter: drop-shadow(0 0 7.5px black);
+                }
+                #annotations *:hover + text {
+                  opacity: 1;
+                }
+                #annotations .area {
+                  opacity: 0.25;
+                  stroke: var(--accent3);
+                  stroke-width: {{div $image.Width 600.0 }};
+                  transition: all 0.35s ease-in-out;
+                }
+                #annotations .area:hover {
+                  opacity: 1;
+                  stroke-width: {{div $image.Width 400.0 }};
+                }
+                #annotations .point path {
+                  pointer-events: none;
+                  opacity: 0.5;
+                  stroke-width: {{div $image.Width 500.0 }};
+                  stroke: var(--accent1);
+                  transition: all 0.35s ease-in-out;
+                }
+                #annotations .point circle:hover ~ path {
+                  opacity: 1;
+                  transform: rotate(135deg) scale(140%);
+                }
+              </style>
+              {{ $dist := div $image.Width 200.0 }}
+              {{ $len := div $image.Width 50.0 }}
+              {{ range sort (getJSON $annotationsPath).annotations "radius" "desc" }}
+                {{ if (eq .type "ngc") }}
+                  <circle class="area" cx="{{.pixelx}}" cy="{{.pixely}}" r="{{.radius}}" />
+                {{ else if (eq .type "star")}}
+                  <g class="point">
+                    <circle cx="{{.pixelx}}" cy="{{.pixely}}" r="{{$dist}}" />
+                    <path d="M{{.pixelx}},{{add .pixely $dist}} L{{.pixelx}},{{add .pixely $dist $len}}
+                             M{{.pixelx}},{{sub .pixely $dist}} L{{.pixelx}},{{sub .pixely $dist $len}}
+                             M{{add .pixelx $dist}},{{.pixely}} L{{add .pixelx $dist $len}},{{.pixely}}
+                             M{{sub .pixelx $dist}},{{.pixely}} L{{sub .pixelx $dist $len}},{{.pixely}}" />
+                  </g>
+                {{ end }}
+                <text x="{{.pixelx}}" y="{{.pixely}}"
+                      dominant-baseline="{{cond (le .pixely (div $image.Height 2)) "hanging" "auto"}}"
+                      text-anchor="{{cond (le .pixelx (div $image.Width 3)) "start" (cond (le .pixelx (div $image.Width 1.5)) "middle" "end")}}">
+                  {{- delimit .names " / " -}}
+                </text>
+              {{ end }}
+            </svg>
+          {{ end }}
       </div>
       {{ end }}
       <article>
