@@ -189,7 +189,7 @@ div.content {
         width: 22px;
         aspect-ratio: 1;
         vertical-align: text-bottom;
-        transform: translateY(2px);
+        transform: translateY(1px);
       }
     }
   }
