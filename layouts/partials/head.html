@@ -18,10 +18,12 @@
 {{ if (eq .Page.Layout "search") }}
     <script src='{{ (resources.Get "js/lunr.min.js").RelPermalink }}'></script>
     <script src='{{ (resources.Get "js/search.js").RelPermalink }}'></script>
-    <link rel="prefetch" href="/index.json"  as="fetch" />
+    <link rel="prefetch" href="/index.json" as="fetch" />
 {{ end }}
 {{ partial "head/css.html" . }}
 {{ partial "head/js.html" . }}
+
+{{ partial "head/opengraph.html" . }}
 
 <script> let FF_FOUC_FIX; </script>
 

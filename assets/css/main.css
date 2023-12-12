@@ -212,12 +212,32 @@ div.content {
         top: 0;
         left: 0;
       }
+
+      & #image_buttons {
+        display: flex;
+        justify-content: space-around;
+        max-height: 0;
+        transition: max-height 0.5s ease-in-out;
+        vertical-align: middle;
+        & .image_button {
+          margin-top: 0.5rem;
+          text-align: center;
+          font-weight: bold;
+          display: grid;
+          & > svg {
+            margin: 0 auto;
+          }
+        }
+      }
     }
 
     & article {
       background-color: var(--block-background);
       padding: min(3rem, 8vw);
     }
+  }
+  & .image:hover #image_buttons {
+    max-height: 120px;
   }
 }
 

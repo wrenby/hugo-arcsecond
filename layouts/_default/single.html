@@ -5,16 +5,16 @@
       {{ $jpg := $image.Resize "1150x jpg q95 Lanczos" }}
       <div class="image">
         <img
-          srcset="{{ $jpg.RelPermalink }}"
-          src="{{ $image.RelPermalink }}"
+          src="{{ $jpg.RelPermalink }}"
           alt="{{ .Params.title }}"
           id="featured_image"
           style="aspect-ratio: {{ $image.Width }}/{{ $image.Height }};" />
 
-          {{ $annotationsPath := (path.Join (path.Dir $.Page.File.Path) "annotations.json") }}
-          {{ if (fileExists $annotationsPath) }}
-            {{ $annotationsPath := (strings.TrimPrefix hugo.WorkingDir (path.Join (path.Dir $.Page.File.Filename) "annotations.json")) }}
-            <svg id="annotations" viewBox="0 0 {{$image.Width}} {{$image.Height}}" xmlns="http://www.w3.org/2000/svg">
+          <svg id="annotations" viewBox="0 0 {{$image.Width}} {{$image.Height}}" xmlns="http://www.w3.org/2000/svg">
+
+            {{ $annotationsPath := (path.Join (path.Dir $.Page.File.Path) "annotations.json") }}
+            {{ if (fileExists $annotationsPath) }}
+              {{ $annotationsPath := (strings.TrimPrefix hugo.WorkingDir (path.Join (path.Dir $.Page.File.Filename) "annotations.json")) }}
               <style>
                 #annotations {
                   opacity: 0;
@@ -63,7 +63,7 @@
                 }
               </style>
               {{ $dist := div $image.Width 200.0 }}
-              {{ $len := div $image.Width 50.0 }}
+              {{ $len := div $image.Width 60.0 }}
               {{ range sort (getJSON $annotationsPath).annotations "radius" "desc" }}
                 {{ if (eq .type "ngc") }}
                   <circle class="area" cx="{{.pixelx}}" cy="{{.pixely}}" r="{{.radius}}" />
@@ -81,9 +81,93 @@
                       text-anchor="{{cond (le .pixelx (div $image.Width 3)) "start" (cond (le .pixelx (div $image.Width 1.5)) "middle" "end")}}">
                   {{- delimit .names " / " -}}
                 </text>
+               {{ end }}
               {{ end }}
-            </svg>
-          {{ end }}
+          </svg>
+          <div id="image_buttons">
+            {{ with $.Params.framing }}
+            {{ if (and .ra .dec .width .height) }}
+            {{ $ra := trim (replaceRE `[°'"hms]` " " .ra) " " }}
+
+            {{ $dec := trim (replaceRE `[°'"hms]` " " .dec) " " }}
+            {{ if not (or (hasPrefix $dec "+") (hasPrefix $dec "-")) }}
+              {{ $dec = printf "+%s" $dec }}
+            {{ end }}
+
+            {{/* width in degrees */}}
+            {{ $match := after 1 (index (findRESubmatch `([0-9]+(?:\.[0-9]+)?)([°"'])+` .width) 0) }}
+            {{ $dms := dict }}
+            {{ range seq 0 (sub (div (len $match) 2) 1) }}
+              {{ $dms = merge $dms (dict (index $match (add . 1)) (index $match .))}}
+            {{ end }}
+
+            {{ $deg := (index $dms "°") | default "0" | float }}
+            {{ $min := (index $dms "'") | default "0" | float }}
+            {{ $sec := (index $dms "\"") | default "0" | float }}
+            {{ $fovw := add $deg (div $min 60.0) (div $sec 360.0) }}
+
+            {{/* repeat for height */}}
+            {{ $match = after 1 (index (findRESubmatch `([0-9]+(?:\.[0-9]+)?)([°'"])+` .height) 0) }}
+            {{ $dms = dict }}
+            {{ range seq 0 (sub (div (len $match) 2) 1) }}
+              {{ $dms = merge $dms (dict (index $match (add . 1)) (index $match .))}}
+            {{ end }}
+
+            {{ $deg = (index $dms "°") | default "0" | float }}
+            {{ $min = (index $dms "'") | default "0" | float }}
+            {{ $sec = (index $dms "\"") | default "0" | float }}
+            {{ $fovh := add $deg (div $min 60.0) (div $sec 360.0) }}
+
+            {{ $fov := printf "%.2f" (math.Max $fovw $fovh) }}
+
+            <a href="https://aladin.cds.unistra.fr/AladinLite/?target={{$ra}}{{$dec}}&fov={{$fov}}" target="_blank" rel="noopener noreferrer">
+              <div class="image_button">
+                <svg width="36" height="36" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <defs id="defs1">
+                    <clipPath clipPathUnits="userSpaceOnUse" id="clipAladinOutline">
+                      <path id="path21" style="display:none;fill:currentColor;stroke-width:1.03406" d="m -26.044537,-16.726905 c -0.318086,-0.131577 -0.688154,-0.102833 -0.960963,0.07378 -0.272808,0.176617 -0.441657,0.497923 -0.438736,0.83354 l 0.04627,4.684797 -2.480934,-1.030948 c -0.416239,-0.172676 -0.916412,-0.05571 -1.183597,0.274146 l -5.563449,6.8902243 a 0.32253095,0.30024249 44.999995 0 0 -0.0019,-7.809e-4 c -0.200386,0.249564 -0.263852,0.6061386 -0.167597,0.9298276 0.09626,0.3236907 0.350809,0.6079925 0.664352,0.7389404 l 12.659734,5.2607321 c 0.311385,0.1297341 0.672155,0.1063566 0.943623,-0.060508 0.271467,-0.1668659 0.446123,-0.4737271 0.456831,-0.8014446 l 0.497376,-15.1479099 a 0.32253095,0.30024249 44.999995 0 0 6.32e-4,-0.0018 c 0.014,-0.445287 -0.288398,-0.904897 -0.711775,-1.080199 z m -1.324734,8.9608779 0.02373,2.4327604 -1.416628,-0.5886772 z" />
+                      <path id="lpe_path-effect21" style="display:block;fill:currentColor;stroke-width:1.03406" class="powerclip" d="M -45.312202,-18.777543 H -9.9648063 V 5.1800959 H -45.312202 Z m 19.267665,2.050638 c -0.318086,-0.131577 -0.688154,-0.102833 -0.960963,0.07378 -0.272808,0.176617 -0.441657,0.497923 -0.438736,0.83354 l 0.04627,4.684797 -2.480934,-1.030948 c -0.416239,-0.172676 -0.916412,-0.05571 -1.183597,0.274146 l -5.563449,6.8902243 a 0.32253095,0.30024249 44.999995 0 0 -0.0019,-7.809e-4 c -0.200386,0.249564 -0.263852,0.6061386 -0.167597,0.9298276 0.09626,0.3236907 0.350809,0.6079925 0.664352,0.7389404 l 12.659734,5.2607321 c 0.311385,0.1297341 0.672155,0.1063566 0.943623,-0.060508 0.271467,-0.1668659 0.446123,-0.4737271 0.456831,-0.8014446 l 0.497376,-15.1479099 a 0.32253095,0.30024249 44.999995 0 0 6.32e-4,-0.0018 c 0.014,-0.445287 -0.288398,-0.904897 -0.711775,-1.080199 z m -1.324734,8.9608779 -1.392898,1.8440832 1.416628,0.5886772 z" />
+                    </clipPath>
+                  </defs>
+                  <path
+                    id="aladinRing"
+                    style="fill:none;stroke:currentColor;stroke-width:2.2;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1"
+                    transform="matrix(0.9276733,-0.39627879,0.32894881,0.95362851,39.875934,7.855231)"
+                    clip-path="url(#clipAladinOutline)"
+                    d="m -16.205526,-6.7987237 a 11.432978,5.7380996 0 0 1 -11.432978,5.7380996 11.432978,5.7380996 0 0 1 -11.432978,-5.7380996 11.432978,5.7380996 0 0 1 11.432978,-5.7380993 11.432978,5.7380996 0 0 1 11.432978,5.7380993 z" />
+                  <path
+                    id="aladin"
+                    style="display:inline;fill:currentColor;fill-opacity:1;stroke-width:1.04087"
+                    d="M 8.1508923,9.1515519 H 11.449642 L 9.8157183,14.659145 H 14.249484 L 10.206749,3.2892631 h 3.996717 L 18.720113,17.918738 H 5.2586943 Z" />
+                </svg>
+                Open in Aladin
+              </div>
+            </a>
+            {{ end }}
+            {{ end }}
+            <div class="image_button">
+              <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-share" width="36" height="36" viewBox="0 0 24 24" stroke-width="2.25" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                <path d="M6 12m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" />
+                <path d="M18 6m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" />
+                <path d="M18 18m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" />
+                <path d="M8.7 10.7l6.6 -3.4" />
+                <path d="M8.7 13.3l6.6 3.4" />
+              </svg>
+              Share
+            </div>
+            <a href="{{$image.RelPermalink}}" target="_blank" rel="noopener noreferrer">
+              <div class="image_button">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-external-link" width="36" height="36" viewBox="0 0 24 24" stroke-width="2.25" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                  <path d="M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6" />
+                  <path d="M11 13l9 -9" />
+                  <path d="M15 4h5v5" />
+                </svg>
+                Full Resolution
+              </div>
+            </a>
+          </div>
       </div>
       {{ end }}
       <article>
@@ -99,12 +183,12 @@
     </div>
     <aside>
       {{ $star_chart_is_local := fileExists (path.Join (path.Dir .Page.File.Path) "star-chart.jpg") }}
-      {{ $star_chart_src := (cond $star_chart_is_local "star-chart.jpg" (cond (ne .Params.star_chart nil) (resources.Get .Params.star_chart) nil))}}
+      {{ $star_chart_src := cond $star_chart_is_local "star-chart.jpg" (resources.Get .Params.star_chart) }}
       {{- if $star_chart_src -}}
       <section id="star-chart">
         <h3>Star Chart</h3>
         {{/* per-page setting overrides global setting, default is astrometry.net */}}
-        {{ $from := (cond (ne .Params.star_chart_from nil) .Params.star_chart_from (cond (ne .Site.Params.star_charts_from nil) .Site.Params.star_charts_from "astrometry.net" )) }}
+        {{ $from := or .Params.star_chart_from (or .Site.Params.star_charts_from "astrometry.net" ) }}
         <img
           src="{{- $star_chart_src -}}"
           alt="A chart showing the featured image's location relative to the constellations"
