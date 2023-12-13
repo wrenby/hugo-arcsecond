@@ -16,14 +16,14 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url("/Inter-Regular-Latin.woff2") format("woff2"), url("/Inter-Regular-Latin.zopfli.woff") format("woff");
+  src: url("/fonts/Inter-Regular-Latin.woff2") format("woff2"), url("/fonts/Inter-Regular-Latin.zopfli.woff") format("woff");
 }
 @font-face {
   font-family: "Inter";
   font-style: italic;
   font-weight: 400;
   font-display: swap;
-  src: url("/Inter-Italic-Latin.woff2") format("woff2"), url("/Inter-Italic-Latin.zopfli.woff") format("woff");
+  src: url("/fonts/Inter-Italic-Latin.woff2") format("woff2"), url("/fonts/Inter-Italic-Latin.zopfli.woff") format("woff");
 }
 
 @font-face {
@@ -31,14 +31,14 @@
   font-style: normal;
   font-weight: 700;
   font-display: swap;
-  src: url("/Inter-Bold-Latin.woff2") format("woff2"), url("/Inter-Bold-Latin.zopfli.woff") format("woff");
+  src: url("/fonts/Inter-Bold-Latin.woff2") format("woff2"), url("/fonts/Inter-Bold-Latin.zopfli.woff") format("woff");
 }
 @font-face {
   font-family: "Inter";
   font-style: italic;
   font-weight: 700;
   font-display: swap;
-  src: url("/Inter-BoldItalic-Latin.woff2") format("woff2"), url("/Inter-BoldItalic-Latin.zopfli.woff") format("woff");
+  src: url("/fonts/Inter-BoldItalic-Latin.woff2") format("woff2"), url("/fonts/Inter-BoldItalic-Latin.zopfli.woff") format("woff");
 }
 
 html {
@@ -255,7 +255,7 @@ div.image:hover section.controls {
 #star-chart {
   padding: 0.75rem;
   & h3 {
-    padding: auto 0 0 1rem;
+    margin: 1rem 0 0 1rem;
   }
   & img {
     display: block;
@@ -494,6 +494,13 @@ header nav ul {
 
 .gallery-grid-item .img-pad:hover .overlay,.gallery-grid-item .img-pad:focus-within .overlay {
   transform: translateY(0%) scale(102%);
+}
+
+.giscus {
+  margin-top: 1rem;
+}
+#comments {
+  overflow: visible;
 }
 
 @keyframes slideInFromLeft {

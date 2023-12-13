@@ -215,8 +215,28 @@ function initSearchBoxCallbacks() {
     }
 }
 
+function initCommentsPositioner() {
+    let comments = document.getElementById("comments");
+    const underArticle = document.getElementsByClassName("image-and-article")[0];
+    const underEverything = document.getElementsByClassName("content")[0];
+    function positionComments() {
+        if (window.innerWidth > 1000) {
+            if (comments.parentNode != underArticle) {
+                comments = underArticle.appendChild(comments);
+            }
+        } else if (comments.parentNode != underEverything) {
+            comments = underEverything.appendChild(comments);
+        }
+    }
+    if (comments) {
+        positionComments();
+        window.addEventListener("resize", positionComments);
+    }
+}
+
 document.addEventListener("DOMContentLoaded", async (ev) => {
     layoutGallery();
     initSearchBoxCallbacks();
     initTooltipPositioner();
+    initCommentsPositioner();
 });

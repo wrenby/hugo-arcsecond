@@ -180,6 +180,9 @@
         </div>
         {{ .Content }}
       </article>
+      <div id="comments">
+        {{- partial "comments.html" . -}}
+      </div>
     </div>
     <aside>
       {{ $star_chart_is_local := fileExists (path.Join (path.Dir .Page.File.Path) "star-chart.jpg") }}
