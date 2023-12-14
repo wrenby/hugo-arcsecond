@@ -519,6 +519,9 @@ header nav ul {
     min-width: min(95vw, 1450px);
     max-width: min(95vw, 1450px);
   }
+  & .no-aside {
+    margin: auto 160px;
+  }
 }
 
 @media (max-width: 1350px) {

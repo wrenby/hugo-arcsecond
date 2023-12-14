@@ -1,6 +1,11 @@
 {{ define "main" }}
   <div class="content">
-    <div class="image-and-article">
+    {{ $star_chart_is_local := fileExists (path.Join (path.Dir .Page.File.Path) "star-chart.jpg") }}
+    {{ $star_chart_src := cond $star_chart_is_local "star-chart.jpg" (resources.Get .Params.star_chart) }}
+    {{ $has_details := or .Params.equipment (or .Params.framing .Params.environment) }}
+    {{ $has_tags := and .Params.tags (gt (len .Params.tags) 0) }}
+    {{ $aside_has_content := or $has_tags (or $has_details $star_chart_src)}}
+    <div class="image-and-article{{ if not $aside_has_content }} no-aside{{ end }}">
       {{ with $image := resources.GetMatch .Params.featured_image }}
       {{ $jpg := $image.Resize "1150x jpg q95 Lanczos" }}
       <div class="image">
@@ -184,9 +189,8 @@
         {{- partial "comments.html" . -}}
       </div>
     </div>
+    {{- if $aside_has_content -}}
     <aside>
-      {{ $star_chart_is_local := fileExists (path.Join (path.Dir .Page.File.Path) "star-chart.jpg") }}
-      {{ $star_chart_src := cond $star_chart_is_local "star-chart.jpg" (resources.Get .Params.star_chart) }}
       {{- if $star_chart_src -}}
       <section id="star-chart">
         <h3>Star Chart</h3>
@@ -200,7 +204,7 @@
       </section>
       {{- end -}}
 
-      {{- if (or .Params.equipment (or .Params.framing .Params.environment)) -}}
+      {{- if $has_details -}}
       <section id="details">
         <h3>Details</h3>
 
@@ -376,9 +380,12 @@
         </section>
         {{- end -}}
 
+        {{- if $has_tags -}}
         <section id="tags">
           {{ partial "terms.html" (dict "taxonomy" "tags" "page" .) }}
         </section>
+        {{- end -}}
     </aside>
+    {{- end -}}
   </div>
 {{ end }}
