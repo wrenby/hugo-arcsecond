@@ -169,11 +169,11 @@ a {
 div.content {
   display: flex;
   justify-content: space-between;
+  gap: 1rem;
 
   & aside {
     min-width: min(320px, 50%);
     max-width: min(320px, 50%);
-    margin-left: 1rem;
 
     & h4 {
       margin: 1rem 0 0.5rem 0;
@@ -239,6 +239,12 @@ div.content {
   & .image:hover #image_buttons {
     max-height: 120px;
   }
+
+}
+
+.no-aside {
+  max-width: 1114px;
+  margin: auto;
 }
 
 div.image:hover section.controls {
@@ -496,11 +502,18 @@ header nav ul {
   transform: translateY(0%) scale(102%);
 }
 
-.giscus {
-  margin-top: 1rem;
+.comments-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
 }
 #comments {
-  overflow: visible;
+  margin-top: 1rem;
+  flex: 1;
+}
+.comments-spacer {
+  min-width: min(320px, 50%);
+  max-width: min(320px, 50%);
 }
 
 @keyframes slideInFromLeft {
@@ -518,9 +531,6 @@ header nav ul {
   body {
     min-width: min(95vw, 1450px);
     max-width: min(95vw, 1450px);
-  }
-  & .no-aside {
-    margin: auto 160px;
   }
 }
 
@@ -544,8 +554,6 @@ header nav ul {
 
     & aside {
       /* TODO: make a breakpoint where the aside sections are 2 per row */
-      margin-left: 0rem;
-      margin-top: 1rem;
       min-width: unset;
       max-width: unset;
       display: flex;
@@ -562,6 +570,9 @@ header nav ul {
         flex: 2;
       }
     }
+  }
+  .comments-spacer {
+    display: none;
   }
 }
 

@@ -185,9 +185,6 @@
         </div>
         {{ .Content }}
       </article>
-      <div id="comments">
-        {{- partial "comments.html" . -}}
-      </div>
     </div>
     {{- if $aside_has_content -}}
     <aside>
@@ -387,5 +384,11 @@
         {{- end -}}
     </aside>
     {{- end -}}
+  </div>
+  <div class="comments-container">
+    <div id="comments"{{if not $aside_has_content}} class="no-aside"{{ end }}>
+      {{- partial "comments.html" . -}}
+    </div>
+    {{ if $aside_has_content }}<div class="comments-spacer"></div>{{ end }}
   </div>
 {{ end }}
