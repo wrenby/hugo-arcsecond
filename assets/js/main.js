@@ -4,7 +4,7 @@ let definitionsRequest = fetch("/definitions.json");
 
 function createAllTooltips(definitions) {
     let terms = document.getElementsByClassName("term");
-    for (t of terms) {
+    for (const t of terms) {
         const term = t.getAttribute("data-term");
         createTooltip(t, term, definitions[term]);
     }
@@ -33,7 +33,7 @@ function createTooltip(term_elem, term, defn) {
 }
 
 function resetAllTooltipPositions() {
-    for (term of document.getElementsByClassName("term")) {
+    for (const term of document.getElementsByClassName("term")) {
         term.firstElementChild.style.top = "-999px";
         term.firstElementChild.style.left = "-999px";
     }
@@ -215,8 +215,35 @@ function initSearchBoxCallbacks() {
     }
 }
 
+function initViewOptions() {
+    const toggleVisible = document.getElementById("view-options");
+    const eyeIcon = toggleVisible.getElementsByClassName("icon-tabler-eye-cog")[0];
+    const modal = document.getElementById("view-options-modal");
+    let visible = false;
+    const image = document.getElementById("featured_image");
+
+    modal.getElementsByTagName("form")[0].reset();
+
+    document.addEventListener("click", (ev) => {
+        if (visible && ev.target.closest("#view-options-modal") != modal) {
+            modal.style.display = "none";
+            visible = false;
+        } else if (ev.target == toggleVisible || ev.target.closest("svg") == eyeIcon) {
+            modal.style.display = "block";
+            visible = true;
+        }
+    });
+
+    for (const radio of modal.getElementsByClassName("channel-filter")) {
+        radio.addEventListener("click", () => {
+            image.style.filter = `url("/filters/view-options.svg#${radio.value}")`;
+        })
+    }
+}
+
 document.addEventListener("DOMContentLoaded", async (ev) => {
     layoutGallery();
     initSearchBoxCallbacks();
     initTooltipPositioner();
+    initViewOptions();
 });

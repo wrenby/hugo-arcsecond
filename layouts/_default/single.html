@@ -7,10 +7,10 @@
     {{ $aside_has_content := or $has_tags (or $has_details $star_chart_src)}}
     <div class="image-and-article{{ if not $aside_has_content }} no-aside{{ end }}">
       {{ with $image := resources.GetMatch .Params.featured_image }}
-      {{ $jpg := $image.Resize "1150x jpg q95 Lanczos" }}
+      {{ $resized := cond (gt $image.Width 1150) ($image.Resize "1150x png Lanczos") $image }}
       <div class="image">
         <img
-          src="{{ $jpg.RelPermalink }}"
+          src="{{ $resized.RelPermalink }}"
           alt="{{ .Params.title }}"
           id="featured_image"
           style="aspect-ratio: {{ $image.Width }}/{{ $image.Height }};" />
@@ -89,9 +89,11 @@
                {{ end }}
               {{ end }}
           </svg>
-          <div id="image_buttons">
+          <div id="image-buttons">
+            {{ $has_aladin_link := false}}
             {{ with $.Params.framing }}
-            {{ if (and .ra .dec .width .height) }}
+            {{ $has_aladin_link = (and .ra .dec .width .height) }}
+            {{ if $has_aladin_link }}
             {{ $ra := trim (replaceRE `[°'"hms]` " " .ra) " " }}
 
             {{ $dec := trim (replaceRE `[°'"hms]` " " .dec) " " }}
@@ -126,7 +128,7 @@
             {{ $fov := printf "%.2f" (math.Max $fovw $fovh) }}
 
             <a href="https://aladin.cds.unistra.fr/AladinLite/?target={{$ra}}{{$dec}}&fov={{$fov}}" target="_blank" rel="noopener noreferrer">
-              <div class="image_button">
+              <div class="image-button">
                 <svg width="36" height="36" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                   <defs id="defs1">
                     <clipPath clipPathUnits="userSpaceOnUse" id="clipAladinOutline">
@@ -150,20 +152,71 @@
             </a>
             {{ end }}
             {{ end }}
-            <div class="image_button">
-              <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-share" width="36" height="36" viewBox="0 0 24 24" stroke-width="2.25" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            {{ $has_orrery_link := false }}
+            {{ with $.Params.orrery }}
+              {{ $has_orrery_link = and .target .time }}
+              {{ if $has_orrery_link }}
+              <a {{ (printf "href='https://eyes.nasa.gov/apps/orrery/#/%s?range=near&time=%s'" .target .time) | safeHTMLAttr }} target="_blank" rel="noopener noreferrer">
+                <div class="image-button">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-planet" width="36" height="36" viewBox="0 0 24 24" stroke-width="2.1" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                    <path d="M18.816 13.58c2.292 2.138 3.546 4 3.092 4.9c-.745 1.46 -5.783 -.259 -11.255 -3.838c-5.47 -3.579 -9.304 -7.664 -8.56 -9.123c.464 -.91 2.926 -.444 5.803 .805" />
+                    <path d="M12 12m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" />
+                  </svg>
+                  Open in Orrery
+                </div>
+              </a>
+              {{ end }}
+            {{ end }}
+            <div class="image-button" id="view-options">
+              <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-eye-cog" width="36" height="36" viewBox="0 0 24 24" stroke-width="2.15" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                 <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                <path d="M6 12m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" />
-                <path d="M18 6m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" />
-                <path d="M18 18m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" />
-                <path d="M8.7 10.7l6.6 -3.4" />
-                <path d="M8.7 13.3l6.6 3.4" />
+                <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+                <path d="M12 18c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" />
+                <path d="M19.001 19m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
+                <path d="M19.001 15.5v1.5" />
+                <path d="M19.001 21v1.5" />
+                <path d="M22.032 17.25l-1.299 .75" />
+                <path d="M17.27 20l-1.3 .75" />
+                <path d="M15.97 17.25l1.3 .75" />
+                <path d="M20.733 20l1.3 .75" />
               </svg>
-              Share
+              View Options
+              <div id="view-options-modal" style="left: {{ if (or $has_aladin_link $has_orrery_link) }}50%{{ else }}100%{{ end }}">
+                <form>
+                  <label for="revision">Revision: </label>
+                  <select id="revision" name="revision">
+                    <option value="featured">{{ $.Date | time.Format ":date_medium" }} (Featured)</option>
+                  </select>
+                  <div>
+                    <fieldset>
+                      <legend>Channel Filtering</legend>
+                      <div class="channel-filter-grid">
+                        <div>
+                          <input type="radio" name="channel" class="channel-filter" id="channel-filter-all" value="all" checked />
+                          <label for="channel-filter-all">All</label>
+                        </div>
+                        <div>
+                          <input type="radio" name="channel" class="channel-filter" id="channel-filter-red" value="red" />
+                          <label for="channel-filter-red">Red</label>
+                        </div>
+                        <div>
+                          <input type="radio" name="channel" class="channel-filter" id="channel-filter-green" value="green" />
+                          <label for="channel-filter-green">Green</label>
+                        </div>
+                        <div>
+                          <input type="radio" name="channel" class="channel-filter" id="channel-filter-blue" value="blue" />
+                          <label for="channel-filter-blue">Blue</label>
+                        </div>
+                      </div>
+                    </fieldset>
+                  </div>
+                </form>
+              </div>
             </div>
             <a href="{{$image.RelPermalink}}" target="_blank" rel="noopener noreferrer">
-              <div class="image_button">
-                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-external-link" width="36" height="36" viewBox="0 0 24 24" stroke-width="2.25" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+              <div class="image-button">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-external-link" width="36" height="36" viewBox="0 0 24 24" stroke-width="2.15" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                   <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
                   <path d="M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6" />
                   <path d="M11 13l9 -9" />

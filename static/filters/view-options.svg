@@ -1,0 +1,28 @@
+<svg id="view-options-filters" xmlns="http://www.w3.org/2000/svg" version="1.1">
+    <defs>
+        <filter id="all">
+            <feColorMatrix type="matrix" values="1 0 0 0 0
+                                                 0 1 0 0 0
+                                                 0 0 1 0 0
+                                                 0 0 0 0 1" />
+        </filter>
+        <filter id="red">
+            <feColorMatrix type="matrix" values="1 0 0 0 0
+                                                 1 0 0 0 0
+                                                 1 0 0 0 0
+                                                 0 0 0 0 1" />
+        </filter>
+        <filter id="green">
+            <feColorMatrix type="matrix" values="0 1 0 0 0
+                                                 0 1 0 0 0
+                                                 0 1 0 0 0
+                                                 0 0 0 0 1" />
+        </filter>
+        <filter id="blue">
+            <feColorMatrix type="matrix" values="0 0 1 0 0
+                                                 0 0 1 0 0
+                                                 0 0 1 0 0
+                                                 0 0 0 0 1" />
+        </filter>
+    </defs>
+</svg>
