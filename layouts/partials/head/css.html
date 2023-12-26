@@ -20,6 +20,10 @@
   {{- end }}
 {{ end }}
 
+{{ if .Params.math }}
+  <link rel="stylesheet" href="{{ (resources.Get "css/katex.min.css").RelPermalink}}" />
+{{ end }}
+
 {{ range .Site.Params.custom_css -}}
-    <link rel="stylesheet" href="{{ (resources.Get .).RelPermalink }}" />
+  <link rel="stylesheet" href="{{ (resources.Get .).RelPermalink }}" />
 {{- end }}

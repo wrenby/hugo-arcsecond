@@ -15,6 +15,10 @@
     {{- end }}
   {{- end }}
 {{- end }}
+{{ if .Params.math }}
+  <script defer src="{{ (resources.Get "js/katex.min.js").RelPermalink }}"></script>
+  <script defer src="{{ (resources.Get "js/katex-auto-render.min.js").RelPermalink }}" onload="renderMathInElement(document.body);"></script>
+{{ end }}
 {{ range .Site.Params.custom_js -}}
     <script type="text/javascript" src="{{ (resources.Get .).RelPermalink }}"></script>
 {{- end }}
