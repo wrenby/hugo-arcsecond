@@ -237,6 +237,17 @@ div.content {
     & article {
       background-color: var(--block-background);
       padding: min(3rem, 8vw);
+      & table {
+        border: 1px solid var(--text);
+        border-collapse: collapse;
+        & th, td {
+          border: 1px solid var(--text);
+          padding: 0.25rem 0.5rem;
+        }
+      }
+      & .overflow-scroll {
+        overflow: scroll;
+      }
     }
   }
   & .image:hover #image-buttons {
@@ -569,6 +580,7 @@ header nav ul {
 @media (max-width: 1350px) {
   body {
     min-width: min(95vw, 1450px);
+    max-width: min(95vw, 1450px);
     padding: 0 2.5vw;
   }
 }

@@ -186,7 +186,15 @@
                 <form>
                   <label for="revision">Revision: </label>
                   <select id="revision" name="revision">
-                    <option value="featured">{{ $.Date | time.Format ":date_medium" }} (Featured)</option>
+                    {{ if .Params.revisions }}
+                      {{ range .Params.revisions }}
+                        {{ $revision := resources.GetMatch .image }}
+                        {{ $resized := cond (gt $revision.Width 1150) ($revision.Resize "1150x png Lanczos") $revision }}
+                        <option value="{{ $revision.RelPermalink }}">{{ .date | time.Format ":date_medium" }}{{ with .name }} ({{ . }}){{ end }}</option>
+                      {{ end }}
+                    {{ else }}
+                      <option value="featured">{{ $.Date | time.Format ":date_medium" }} (Featured)</option>
+                    {{ end }}
                   </select>
                   <div>
                     <fieldset>
