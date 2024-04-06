@@ -1,0 +1,17 @@
+{{ define "main" }}
+  {{ $paginator := .Paginate .Pages.ByTitle 12 }}
+  <div id="gallery-grid">
+    {{ range $paginator.Pages }}
+      <div class="gallery-grid-item">
+        <a href="{{ .RelPermalink }}"><p>{{ .Data.Term }}</p></a>
+      </div>
+    {{ end }}
+  </div>
+
+{{ if $.Site.Params.infinite_scroll }}
+  <div id="infinite-loader"></div>
+{{ end }}
+  <div>
+    {{ template "_internal/pagination.html" . }}
+  </div>
+{{ end }}

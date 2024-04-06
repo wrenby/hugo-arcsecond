@@ -317,7 +317,7 @@ div.image:hover section.controls {
     filter: contrast(90%) brightness(120%) grayscale(95%);
   }
   & img.from-pixinsight {
-    filter: contrast(160%) brightness(85%) grayscale(95%);
+    filter: contrast(160%) brightness(85%) grayscale(25%);
   }
 }
 

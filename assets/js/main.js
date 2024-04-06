@@ -217,10 +217,14 @@ function initSearchBoxCallbacks() {
 
 function initViewOptions() {
     const toggleVisible = document.getElementById("view-options");
+    if (!toggleVisible)
+        return;
+
     const eyeIcon = toggleVisible.getElementsByClassName("icon-tabler-eye-cog")[0];
     const modal = document.getElementById("view-options-modal");
     let visible = false;
     const image = document.getElementById("featured_image");
+    const revision = document.getElementById("revision");
 
     modal.getElementsByTagName("form")[0].reset();
 
@@ -239,6 +243,10 @@ function initViewOptions() {
             image.style.filter = `url("/filters/view-options.svg#${radio.value}")`;
         })
     }
+
+    revision.addEventListener("change", () => {
+        image.src = revision.value;
+    });
 }
 
 document.addEventListener("DOMContentLoaded", async (ev) => {
