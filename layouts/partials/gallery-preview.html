@@ -3,6 +3,9 @@
 {{ $which := (cond (ne $root.Params.thumbnail nil) $root.Params.thumbnail $root.Params.featured_image) }}
 {{ if $which }}
     {{ $image := resources.Get $which }}
+    {{ if (eq $image nil) }}
+        {{ errorf $which }}
+    {{ end }}
     {{ $jpg := $image.Resize "500x jpg q90 Lanczos" }}
     {{ $ar := (div $jpg.Width (float $jpg.Height)) }}
     <div class="gallery-grid-item">

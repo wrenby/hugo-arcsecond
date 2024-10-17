@@ -17,9 +17,8 @@
 
           <svg id="annotations" viewBox="0 0 {{$image.Width}} {{$image.Height}}" xmlns="http://www.w3.org/2000/svg">
 
-            {{ $annotationsPath := (path.Join (path.Dir $.Page.File.Path) "annotations.json") }}
-            {{ if (fileExists $annotationsPath) }}
-              {{ $annotationsPath := (strings.TrimPrefix hugo.WorkingDir (path.Join (path.Dir $.Page.File.Filename) "annotations.json")) }}
+            {{ $annotations := ($.Page.Resources.Get "annotations.json") }}
+            {{ if (ne $annotations nil) }}
               <style>
                 #annotations {
                   opacity: 0;
@@ -69,7 +68,7 @@
               </style>
               {{ $dist := div $image.Width 200.0 }}
               {{ $len := div $image.Width 60.0 }}
-              {{ range sort (getJSON $annotationsPath).annotations "radius" "desc" }}
+              {{ range sort ($annotations | transform.Unmarshal).annotations "radius" "desc" }}
                 {{ if (eq .type "ngc") }}
                   <circle class="area" cx="{{.pixelx}}" cy="{{.pixely}}" r="{{.radius}}" />
                 {{ else if (eq .type "star")}}
